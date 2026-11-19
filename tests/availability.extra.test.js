@@ -59,3 +59,27 @@ describe('F3 / F5 — the chosen room decides the answer', () => {
     expect(ROOMS).toEqual(snapshot);
   });
 });
+
+// Assignment #05, mitigation R02: unreadable booking data must not produce "Available"
+describe('R02 — broken booking data fails closed', () => {
+  const room = { id: 'X', blocked: false };
+  const now = new Date('2026-10-28T09:00:00');
+  const req = { start: '2026-10-28T10:00:00', end: '2026-10-28T11:00:00' };
+
+  it('A08 a booking with an unreadable or missing time makes the slot Unavailable', () => {
+    for (const bad of [
+      { id: 'B', roomId: 'X', start: 'not-a-date', end: '2026-10-28T12:00:00' },
+      { id: 'B', roomId: 'X', start: '2026-10-28T09:30:00' },
+      { id: 'B', roomId: 'X', start: '2026-10-28T10:0:00', end: '2026-10-28T11:00:00' },
+    ]) {
+      expect(checkAvailability(req, room, [bad], now)).toEqual({ status: 'Unavailable', reason: 'INVALID_BOOKING_DATA' });
+    }
+  });
+
+  it('A09 a booking whose end is not after its start is treated as broken; other rooms are still ignored', () => {
+    const backwards = { id: 'B', roomId: 'X', start: '2026-10-28T15:00:00', end: '2026-10-28T14:00:00' };
+    expect(checkAvailability(req, room, [backwards], now).reason).toBe('INVALID_BOOKING_DATA');
+    const otherRoom = { id: 'B', roomId: 'Y', start: 'not-a-date', end: 'x' };
+    expect(checkAvailability(req, room, [otherRoom], now)).toEqual({ status: 'Available', reason: 'OK' });
+  });
+});

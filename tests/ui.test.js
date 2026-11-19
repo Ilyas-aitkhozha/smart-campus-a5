@@ -100,3 +100,21 @@ describe('UI — filtering, empty state and room switching', () => {
     expect(check('', '')).toBe('Unavailable: Enter both a start time and an end time. (Computer Lab 303)');
   });
 });
+
+// Assignment #05, mitigation R01: an answer must never be shown next to times it was not computed for
+describe('R01 — no stale answer after the times change', () => {
+  function typeTime(id, value) {
+    $(id).value = value;
+    $(id).dispatchEvent(new Event('input', { bubbles: true }));
+  }
+
+  it('U09 editing the start or end time hides the previous answer until the user checks again', () => {
+    expect(check('11:00', '12:00')).toMatch(/^Available/);
+    typeTime('start', '10:00'); // 10:00-12:00 would overlap B1 (10:00-11:00)
+    expect($('result').hidden).toBe(true);
+    expect($('result').textContent).toBe('');
+    expect(check('10:00', '10:30')).toBe('Unavailable: This time overlaps with an existing booking. (Seminar Room 101)');
+    typeTime('end', '11:30');
+    expect($('result').hidden).toBe(true);
+  });
+});

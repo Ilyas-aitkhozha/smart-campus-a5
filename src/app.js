@@ -1,9 +1,9 @@
 // Smart Campus — UI presentation only. It reads the DOM, calls the pure rules and renders the answers.
 // No booking rule or filter rule is written here; they live in availability.js and filters.js.
 import { checkAvailability } from './availability.js';
-import { filterRooms, parseAttendees } from './filters.js';
+import { buildRoomView } from './roomView.js';
 import { EQUIPMENT, findRoom } from './rooms.js';
-import { describeResult, emptyStateText, formatTime, INVALID_ATTENDEES } from './messages.js';
+import { describeResult, formatTime } from './messages.js';
 
 /**
  * Wires the page in `doc` to the given data. Exported so the UI can be tested with jsdom.
@@ -80,24 +80,21 @@ export function createApp(doc, { rooms, now, nowIso, day }) {
     return card;
   }
 
-  /** Recomputes the matching rooms and keeps the selection consistent with them. */
+  /** Recomputes the matching rooms and keeps the selection consistent with them. Rules: roomView.js */
   function render() {
-    const attendees = parseAttendees(el.attendees.value);
-    const equipment = requiredEquipment();
-    const matching = attendees === null ? [] : filterRooms(rooms, { attendees, equipment });
-
-    el.filterError.hidden = attendees !== null;
-    el.filterError.textContent = attendees === null ? INVALID_ATTENDEES : '';
-
     const previous = selectedId;
-    if (!matching.some((room) => room.id === selectedId)) selectedId = matching[0]?.id ?? null;
+    const view = buildRoomView(rooms, {
+      attendeesText: el.attendees.value, equipment: requiredEquipment(), selectedId,
+    });
+    selectedId = view.selectedId;
 
-    el.roomList.replaceChildren(...matching.map(renderRoomCard));
-    el.roomCount.textContent = `${matching.length} of ${rooms.length} rooms match.`;
+    el.filterError.hidden = view.filterError === '';
+    el.filterError.textContent = view.filterError;
+    el.roomList.replaceChildren(...view.matching.map(renderRoomCard));
+    el.roomCount.textContent = view.countText;
     // F4: clear empty state
-    el.empty.hidden = matching.length > 0;
-    el.empty.textContent = matching.length > 0 ? ''
-      : attendees === null ? INVALID_ATTENDEES : emptyStateText(attendees, equipment);
+    el.empty.hidden = view.emptyText === '';
+    el.empty.textContent = view.emptyText;
 
     renderRoomDetails();
     // F5: if the selected room changed, an old answer would belong to another room -> refresh it
@@ -112,6 +109,9 @@ export function createApp(doc, { rooms, now, nowIso, day }) {
     renderRoomDetails();
     if (!el.result.hidden) showResult(); // F5
   });
+  // A5 mitigation R01: an old answer must not stay next to new times -> hide it until the next check
+  el.start.addEventListener('input', hideResult);
+  el.end.addEventListener('input', hideResult);
   el.form.addEventListener('submit', (event) => {
     event.preventDefault();
     showResult();

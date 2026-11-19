@@ -10,6 +10,7 @@ export const MESSAGES = {
   TOO_LONG: `A booking can last at most ${MAX_DURATION_MINUTES} minutes.`,
   ROOM_BLOCKED: 'This room is blocked and cannot be booked right now.',
   OVERLAP: 'This time overlaps with an existing booking.',
+  INVALID_BOOKING_DATA: 'This room has a booking with an unreadable time, so it cannot be checked. Please contact the campus office.',
 };
 
 /** "2026-10-28T14:00:00" -> "14:00" */

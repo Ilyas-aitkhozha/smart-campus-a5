@@ -39,6 +39,11 @@ export function checkAvailability(request, room, bookings, now) {
     if (b.roomId !== room.id) continue;
     const bStart = new Date(b.start);
     const bEnd = new Date(b.end);
+    // A5 mitigation R02: a booking we cannot read must block the slot (fail closed).
+    // Before, every comparison with NaN was false, so a broken booking was silently ignored -> Available.
+    if (Number.isNaN(bStart.getTime()) || Number.isNaN(bEnd.getTime()) || bStart >= bEnd) {
+      return { status: 'Unavailable', reason: 'INVALID_BOOKING_DATA' };
+    }
     // FIX BUG-A: strict < and > — "10:00-11:00" and "11:00-12:00" do NOT conflict
     if (start < bEnd && end > bStart) {
       return { status: 'Unavailable', reason: 'OVERLAP' };

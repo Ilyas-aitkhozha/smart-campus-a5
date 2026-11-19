@@ -33,3 +33,17 @@ describe('Room catalog (data model)', () => {
     expect(() => room.bookings.push({})).toThrow(TypeError);
   });
 });
+
+describe('Room catalog — booking times (Assignment #05, R02)', () => {
+  it('C04 every booking in the catalog has readable times with start before end', () => {
+    for (const room of ROOMS) {
+      for (const b of room.bookings) {
+        const start = new Date(b.start);
+        const end = new Date(b.end);
+        expect(Number.isNaN(start.getTime()), `${b.id} start`).toBe(false);
+        expect(Number.isNaN(end.getTime()), `${b.id} end`).toBe(false);
+        expect(start < end, `${b.id} start < end`).toBe(true);
+      }
+    }
+  });
+});

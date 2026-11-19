@@ -1,0 +1,1768 @@
+Software Engineering - Assignment #05 - Aitkhozha Ilyas, 24B031612
+Raw outputs of every command referenced in the report as evidence/NN_... . Generated 19 Nov 2026.
+Baseline commit a75f892, final commit b9ef368. Node 22.23.5, npm 10.9.9.
+
+==================================================================
+evidence/01_baseline_install.txt
+==================================================================
+$ node -v && npm -v
+v22.23.5
+10.9.9
+
+$ npm ci
+  run `npm fund` for details
+
+3 vulnerabilities (1 moderate, 2 critical)
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+exit=0
+
+==================================================================
+evidence/02_baseline_test.txt
+==================================================================
+$ npx vitest run --reporter=verbose
+
+ RUN  v3.2.7 /home/claude/work/a5/repo
+
+ ✓ tests/ui.test.js > UI — filtering, empty state and room switching > U01 shows all rooms at start, the blocked one with a label, and no result yet 59ms
+ ✓ tests/ui.test.js > UI — filtering, empty state and room switching > U02 capacity + equipment filters update the visible list (F1, F2) 26ms
+ ✓ tests/ui.test.js > UI — filtering, empty state and room switching > U03 no match shows a clear empty state and disables the check (F4) 19ms
+ ✓ tests/ui.test.js > UI — filtering, empty state and room switching > U04 invalid attendees text gives a field message instead of a list 12ms
+ ✓ tests/ui.test.js > UI — filtering, empty state and room switching > U05 switching the room refreshes the answer with that room's bookings (F5) 23ms
+ ✓ tests/ui.test.js > UI — filtering, empty state and room switching > U06 the blocked room is never shown as available in the UI (F3) 15ms
+ ✓ tests/ui.test.js > UI — filtering, empty state and room switching > U07 a filter that removes the selected room moves the selection and refreshes the answer (F5) 16ms
+ ✓ tests/ui.test.js > UI — filtering, empty state and room switching > U08 original messages still appear: 120 vs 121 minutes, empty fields (AC2, AC6) 10ms
+ ✓ tests/availability.extra.test.js > AC1 — missing or unreadable times (found by a probe on the baseline) > A01 empty start/end is Unavailable, not Available 1ms
+ ✓ tests/availability.extra.test.js > AC1 — missing or unreadable times (found by a probe on the baseline) > A02 text that is not a date is Unavailable 0ms
+ ✓ tests/availability.extra.test.js > Boundaries on catalog rooms > A03 exactly 120 minutes is Available, 121 minutes is TOO_LONG (AC2) 0ms
+ ✓ tests/availability.extra.test.js > Boundaries on catalog rooms > A04 touching is Available, overlapping by one minute is OVERLAP (AC4) 0ms
+ ✓ tests/availability.extra.test.js > F3 / F5 — the chosen room decides the answer > A05 a blocked catalog room is never Available, even for a free slot (F3, AC3) 0ms
+ ✓ tests/availability.extra.test.js > F3 / F5 — the chosen room decides the answer > A06 the same slot gives different answers for different rooms, using each room's own bookings (F5) 0ms
+ ✓ tests/availability.extra.test.js > F3 / F5 — the chosen room decides the answer > A07 many checks do not change any room or booking (AC5) 0ms
+ ✓ tests/availability.test.js > AC1 — valid time range > T01 rejects start >= end 1ms
+ ✓ tests/availability.test.js > AC1 — valid time range > T02 rejects requests in the past 0ms
+ ✓ tests/availability.test.js > AC2 — max duration 120 min > T03 allows exactly 120 minutes 0ms
+ ✓ tests/availability.test.js > AC2 — max duration 120 min > T04 rejects 121 minutes 0ms
+ ✓ tests/availability.test.js > AC3 — blocked room > T05 rejects a blocked room 0ms
+ ✓ tests/availability.test.js > AC4 — overlaps > T06 rejects a real overlap 0ms
+ ✓ tests/availability.test.js > AC4 — overlaps > T07 (BUG-A) allows a booking that starts exactly when another ends 0ms
+ ✓ tests/availability.test.js > AC4 — overlaps > T08 (BUG-A) allows a booking that ends exactly when another starts 0ms
+ ✓ tests/availability.test.js > AC4 — overlaps > T09 ignores bookings of other rooms 0ms
+ ✓ tests/availability.test.js > AC5 — no mutation of booking data > T10 (BUG-B) does not change the original bookings array 1ms
+ ✓ tests/filters.test.js > F1 — capacity filter > F01 exact capacity is enough: 20 attendees keep Seminar Room 101 (capacity 20) 1ms
+ ✓ tests/filters.test.js > F1 — capacity filter > F02 insufficient capacity: 21 attendees remove R-101 (20) but keep R-202 (80) and R-303 (30) 1ms
+ ✓ tests/filters.test.js > F1 — capacity filter > F03 meetsCapacity boundary: capacity 8 fits 8, not 9 0ms
+ ✓ tests/filters.test.js > F2 — equipment filter (ALL selected items required) > F04 projector + computers keeps only Computer Lab 303 0ms
+ ✓ tests/filters.test.js > F2 — equipment filter (ALL selected items required) > F05 a room with only SOME of the items is excluded 0ms
+ ✓ tests/filters.test.js > F2 — equipment filter (ALL selected items required) > F06 no equipment selected -> only capacity decides; all rooms for 1 attendee 0ms
+ ✓ tests/filters.test.js > F3 / F4 — blocked rooms and empty result > F07 a blocked room that matches is still listed (it is labelled Blocked, not hidden) 0ms
+ ✓ tests/filters.test.js > F3 / F4 — blocked rooms and empty result > F08 no match returns an empty array (UI shows the empty state) 0ms
+ ✓ tests/filters.test.js > F3 / F4 — blocked rooms and empty result > F09 filtering returns a new array and does not change the catalog 1ms
+ ✓ tests/filters.test.js > Attendees input parsing > F10 accepts whole numbers >= 1 and rejects 0, negatives, decimals, text and empty 0ms
+ ✓ tests/catalog.test.js > Room catalog (data model) > C01 has at least four rooms with id, name, capacity, equipment, blocked and bookings 1ms
+ ✓ tests/catalog.test.js > Room catalog (data model) > C02 room ids are unique, every booking belongs to its own room, equipment ids are known 1ms
+ ✓ tests/catalog.test.js > Room catalog (data model) > C03 catalog data is frozen, so it cannot be changed by mistake (AC5) 0ms
+
+ Test Files  5 passed (5)
+      Tests  38 passed (38)
+   Start at  09:36:52
+   Duration  1.39s (transform 90ms, setup 0ms, collect 129ms, tests 200ms, environment 279ms, prepare 224ms)
+
+[exit code: 0]
+
+==================================================================
+evidence/03_baseline_build.txt
+==================================================================
+$ npm run build
+
+> smart-campus-practice09@1.0.0 build
+> vite build
+
+vite v6.4.5 building for production...
+transforming...
+✓ 9 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                 2.63 kB │ gzip: 1.00 kB
+dist/assets/index-CuTdS8qQ.css  2.49 kB │ gzip: 0.96 kB
+dist/assets/index-CCqqJ5vM.js   6.40 kB │ gzip: 2.74 kB
+✓ built in 116ms
+[exit code: 0]
+
+==================================================================
+evidence/04_baseline_lint.txt
+==================================================================
+$ npm run lint
+npm error Missing script: "lint"
+npm error
+npm error Did you mean this?
+npm error   npm link # Symlink a package folder
+npm error
+npm error To see a list of scripts, run:
+npm error   npm run
+npm error A complete log of this run can be found in: /home/claude/.npm/_logs/2026-11-19T04_36_54_650Z-debug-0.log
+[exit code: 1]
+
+==================================================================
+evidence/05_baseline_typecheck.txt
+==================================================================
+$ npx --no-install tsc --noEmit
+Version 7.0.2
+tsc: The TypeScript Compiler - Version 7.0.2
+
+COMMON COMMANDS
+
+  tsc
+  Compiles the current project (tsconfig.json in the working directory.)
+
+  tsc app.ts util.ts
+  Ignoring tsconfig.json, compiles the specified files with default compiler options.
+
+  tsc -b
+  Build a composite project in the working directory.
+
+  tsc --init
+  Creates a tsconfig.json with the recommended settings in the working directory.
+
+  tsc -p ./path/to/tsconfig.json
+  Compiles the TypeScript project located at the specified path.
+
+  tsc --help --all
+  An expanded version of this information, showing all possible compiler options
+
+  tsc --noEmit
+  tsc --target esnext
+  Compiles the current project, with additional settings.
+
+COMMAND LINE FLAGS
+
+--help, -h
+Print this message.
+
+--watch, -w
+Watch input files.
+
+--all
+Show all compiler options.
+
+--version, -v
+Print the compiler's version.
+
+--init
+Initializes a TypeScript project and creates a tsconfig.json file.
+
+--project, -p
+Compile the project given the path to its configuration file, or to a folder with a 'tsconfig.json'.
+
+--showConfig
+Print the final configuration instead of building.
+
+--ignoreConfig
+Ignore the tsconfig found and build with commandline options and files.
+
+--build, -b
+Build one or more projects and their dependencies, if out of date
+
+COMMON COMPILER OPTIONS
+
+--pretty
+Enable color and formatting in TypeScript's output to make compiler errors easier to read.
+type: boolean
+default: true
+
+--declaration, -d
+Generate .d.ts files from TypeScript and JavaScript files in your project.
+type: boolean
+default: `false`, unless `composite` is set
+
+--declarationMap
+Create sourcemaps for d.ts files.
+type: boolean
+default: false
+
+--emitDeclarationOnly
+Only output d.ts files and not JavaScript files.
+type: boolean
+default: false
+
+--sourceMap
+Create source map files for emitted JavaScript files.
+type: boolean
+default: false
+
+--noEmit
+Disable emitting files from a compilation.
+type: boolean
+default: false
+
+--target, -t
+Set the JavaScript language version for emitted JavaScript and include compatible library declarations.
+one of: es6/es2015, es2016, es2017, es2018, es2019, es2020, es2021, es2022, es2023, es2024, es2025, esnext
+default: es2025
+
+--module, -m
+Specify what module code is generated.
+one of: commonjs, es6/es2015, es2020, es2022, esnext, node16, node18, node20, nodenext, preserve
+default: undefined
+
+--lib
+Specify a set of bundled library declaration files that describe the target runtime environment.
+one or more: es5, es6/es2015, es7/es2016, es2017, es2018, es2019, es2020, es2021, es2022, es2023, es2024, es2025, esnext, dom, dom.iterable, dom.asynciterable, webworker, webworker.importscripts, webworker.iterable, webworker.asynciterable, scripthost, es2015.core, es2015.collection, es2015.generator, es2015.iterable, es2015.promise, es2015.proxy, es2015.reflect, es2015.symbol, es2015.symbol.wellknown, es2016.array.include, es2016.intl, es2017.arraybuffer, es2017.date, es2017.object, es2017.sharedmemory, es2017.string, es2017.intl, es2017.typedarrays, es2018.asyncgenerator, es2018.asynciterable/esnext.asynciterable, es2018.intl, es2018.promise, es2018.regexp, es2019.array, es2019.object, es2019.string, es2019.symbol/esnext.symbol, es2019.intl, es2020.bigint/esnext.bigint, es2020.date, es2020.promise, es2020.sharedmemory, es2020.string, es2020.symbol.wellknown, es2020.intl, es2020.number, es2021.promise, es2021.string, es2021.weakref/esnext.weakref, es2021.intl, es2022.array, es2022.error, es2022.intl, es2022.object, es2022.string, es2022.regexp, es2023.array, es2023.collection, es2023.intl, es2024.arraybuffer, es2024.collection, es2024.object/esnext.object, es2024.promise, es2024.regexp/esnext.regexp, es2024.sharedmemory, es2024.string/esnext.string, es2025.collection, es2025.float16/esnext.float16, es2025.intl, es2025.iterator/esnext.iterator, es2025.promise/esnext.promise, es2025.regexp, esnext.array, esnext.collection, esnext.date, esnext.decorators, esnext.disposable, esnext.error, esnext.intl, esnext.sharedmemory, esnext.temporal, esnext.typedarrays, decorators, decorators.legacy
+default: undefined
+
+--allowJs
+Allow JavaScript files to be a part of your program. Use the 'checkJs' option to get errors from these files.
+type: boolean
+default: `false`, unless `checkJs` is set
+
+--checkJs
+Enable error reporting in type-checked JavaScript files.
+type: boolean
+default: false
+
+--jsx
+Specify what JSX code is generated.
+one of: preserve, react-native, react-jsx, react-jsxdev, react
+default: undefined
+
+--outFile
+Specify a file that bundles all outputs into one JavaScript file. If 'declaration' is true, also designates a file that bundles all .d.ts output.
+
+--outDir
+Specify an output folder for all emitted files.
+
+--removeComments
+Disable emitting comments.
+type: boolean
+default: false
+
+--strict
+Enable all strict type-checking options.
+type: boolean
+default: true
+
+--types
+Specify type package names to be included without being referenced in a source file.
+
+--esModuleInterop
+Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility.
+type: boolean
+default: true
+
+You can learn about all of the compiler options at https://aka.ms/tsc
+
+[exit code: 1]
+
+==================================================================
+evidence/06_baseline_audit.txt
+==================================================================
+$ npm audit
+# npm audit report
+
+@vitest/mocker  <=4.1.11
+Severity: moderate
+Vitest: Path Traversal / Arbitrary File Read via @vitest/mocker Redirect Mock - https://github.com/advisories/GHSA-82fw-gwwq-j7x9
+Vitest: Code injection via unauthenticated manual mock registration - https://github.com/advisories/GHSA-qxg6-89mg-rqv8
+fix available via `npm audit fix --force`
+Will install vitest@5.1.1, which is a breaking change
+node_modules/@vitest/mocker
+  vitest  0.0.95 - 4.1.10
+  Depends on vulnerable versions of @vitest/mocker
+  Depends on vulnerable versions of tinypool
+  node_modules/vitest
+
+tinypool  <=2.1.1
+Severity: critical
+Tinypool: Prototype Pollution gadget in worker options leads to Remote Code Execution - https://github.com/advisories/GHSA-5gmw-xhrv-c9v3
+Tinypool: Prototype Pollution Gadget to RCE in run() options - https://github.com/advisories/GHSA-85c8-ppgw-ccpr
+fix available via `npm audit fix --force`
+Will install vitest@5.1.1, which is a breaking change
+node_modules/tinypool
+
+
+3 vulnerabilities (1 moderate, 2 critical)
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+[exit code: 1]
+
+==================================================================
+evidence/07_baseline_outdated.txt
+==================================================================
+$ npm outdated
+Package  Current  Wanted  Latest  Location             Depended by
+jsdom     25.0.1  25.0.1  31.0.1  node_modules/jsdom   repo
+vite       6.4.5   6.4.6   8.3.8  node_modules/vite    repo
+vitest     3.2.7   3.2.7   5.1.1  node_modules/vitest  repo
+[exit code: 1]
+
+==================================================================
+evidence/08_probes.txt
+==================================================================
+$ npx vitest run probe.test.js   (probe file run on a scratch copy of the baseline src/)
+P1 {"status":"Available","reason":"OK"}
+P2 {"status":"Available","reason":"OK"}
+P3 injected element exists: true
+P4 {"status":"Available","reason":"OK"}
+      Tests  4 passed (4)
+
+==================================================================
+evidence/09_after_refactor_build.txt
+==================================================================
+$ npm run build
+
+> smart-campus-practice09@1.0.0 build
+> vite build
+
+vite v6.4.5 building for production...
+transforming...
+✓ 10 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                 2.63 kB │ gzip: 1.00 kB
+dist/assets/index-CuTdS8qQ.css  2.49 kB │ gzip: 0.96 kB
+dist/assets/index-Bhoy3dMJ.js   6.67 kB │ gzip: 2.82 kB
+✓ built in 119ms
+[exit code: 0]
+
+==================================================================
+evidence/09_after_refactor_test.txt
+==================================================================
+$ npx vitest run --reporter=verbose
+
+ RUN  v3.2.7 /home/claude/work/a5/repo
+
+ ✓ tests/ui.test.js > UI — filtering, empty state and room switching > U01 shows all rooms at start, the blocked one with a label, and no result yet 54ms
+ ✓ tests/ui.test.js > UI — filtering, empty state and room switching > U02 capacity + equipment filters update the visible list (F1, F2) 16ms
+ ✓ tests/ui.test.js > UI — filtering, empty state and room switching > U03 no match shows a clear empty state and disables the check (F4) 15ms
+ ✓ tests/ui.test.js > UI — filtering, empty state and room switching > U04 invalid attendees text gives a field message instead of a list 12ms
+ ✓ tests/ui.test.js > UI — filtering, empty state and room switching > U05 switching the room refreshes the answer with that room's bookings (F5) 24ms
+ ✓ tests/ui.test.js > UI — filtering, empty state and room switching > U06 the blocked room is never shown as available in the UI (F3) 11ms
+ ✓ tests/ui.test.js > UI — filtering, empty state and room switching > U07 a filter that removes the selected room moves the selection and refreshes the answer (F5) 13ms
+ ✓ tests/ui.test.js > UI — filtering, empty state and room switching > U08 original messages still appear: 120 vs 121 minutes, empty fields (AC2, AC6) 9ms
+ ✓ tests/catalog.test.js > Room catalog (data model) > C01 has at least four rooms with id, name, capacity, equipment, blocked and bookings 1ms
+ ✓ tests/catalog.test.js > Room catalog (data model) > C02 room ids are unique, every booking belongs to its own room, equipment ids are known 1ms
+ ✓ tests/catalog.test.js > Room catalog (data model) > C03 catalog data is frozen, so it cannot be changed by mistake (AC5) 0ms
+ ✓ tests/filters.test.js > F1 — capacity filter > F01 exact capacity is enough: 20 attendees keep Seminar Room 101 (capacity 20) 1ms
+ ✓ tests/filters.test.js > F1 — capacity filter > F02 insufficient capacity: 21 attendees remove R-101 (20) but keep R-202 (80) and R-303 (30) 1ms
+ ✓ tests/filters.test.js > F1 — capacity filter > F03 meetsCapacity boundary: capacity 8 fits 8, not 9 0ms
+ ✓ tests/filters.test.js > F2 — equipment filter (ALL selected items required) > F04 projector + computers keeps only Computer Lab 303 0ms
+ ✓ tests/filters.test.js > F2 — equipment filter (ALL selected items required) > F05 a room with only SOME of the items is excluded 0ms
+ ✓ tests/filters.test.js > F2 — equipment filter (ALL selected items required) > F06 no equipment selected -> only capacity decides; all rooms for 1 attendee 0ms
+ ✓ tests/filters.test.js > F3 / F4 — blocked rooms and empty result > F07 a blocked room that matches is still listed (it is labelled Blocked, not hidden) 0ms
+ ✓ tests/filters.test.js > F3 / F4 — blocked rooms and empty result > F08 no match returns an empty array (UI shows the empty state) 0ms
+ ✓ tests/filters.test.js > F3 / F4 — blocked rooms and empty result > F09 filtering returns a new array and does not change the catalog 1ms
+ ✓ tests/filters.test.js > Attendees input parsing > F10 accepts whole numbers >= 1 and rejects 0, negatives, decimals, text and empty 0ms
+ ✓ tests/availability.extra.test.js > AC1 — missing or unreadable times (found by a probe on the baseline) > A01 empty start/end is Unavailable, not Available 1ms
+ ✓ tests/availability.extra.test.js > AC1 — missing or unreadable times (found by a probe on the baseline) > A02 text that is not a date is Unavailable 0ms
+ ✓ tests/availability.extra.test.js > Boundaries on catalog rooms > A03 exactly 120 minutes is Available, 121 minutes is TOO_LONG (AC2) 0ms
+ ✓ tests/availability.extra.test.js > Boundaries on catalog rooms > A04 touching is Available, overlapping by one minute is OVERLAP (AC4) 0ms
+ ✓ tests/availability.extra.test.js > F3 / F5 — the chosen room decides the answer > A05 a blocked catalog room is never Available, even for a free slot (F3, AC3) 0ms
+ ✓ tests/availability.extra.test.js > F3 / F5 — the chosen room decides the answer > A06 the same slot gives different answers for different rooms, using each room's own bookings (F5) 0ms
+ ✓ tests/availability.extra.test.js > F3 / F5 — the chosen room decides the answer > A07 many checks do not change any room or booking (AC5) 0ms
+ ✓ tests/availability.test.js > AC1 — valid time range > T01 rejects start >= end 1ms
+ ✓ tests/availability.test.js > AC1 — valid time range > T02 rejects requests in the past 0ms
+ ✓ tests/availability.test.js > AC2 — max duration 120 min > T03 allows exactly 120 minutes 0ms
+ ✓ tests/availability.test.js > AC2 — max duration 120 min > T04 rejects 121 minutes 0ms
+ ✓ tests/availability.test.js > AC3 — blocked room > T05 rejects a blocked room 0ms
+ ✓ tests/availability.test.js > AC4 — overlaps > T06 rejects a real overlap 0ms
+ ✓ tests/availability.test.js > AC4 — overlaps > T07 (BUG-A) allows a booking that starts exactly when another ends 0ms
+ ✓ tests/availability.test.js > AC4 — overlaps > T08 (BUG-A) allows a booking that ends exactly when another starts 0ms
+ ✓ tests/availability.test.js > AC4 — overlaps > T09 ignores bookings of other rooms 0ms
+ ✓ tests/availability.test.js > AC5 — no mutation of booking data > T10 (BUG-B) does not change the original bookings array 1ms
+ ✓ tests/roomView.test.js > Room list view model (buildRoomView) > V01 valid input: lists matching rooms, selects the first one, no error or empty text 2ms
+ ✓ tests/roomView.test.js > Room list view model (buildRoomView) > V02 keeps the current selection while it still matches 0ms
+ ✓ tests/roomView.test.js > Room list view model (buildRoomView) > V03 drops a selection that no longer matches and picks the first match 0ms
+ ✓ tests/roomView.test.js > Room list view model (buildRoomView) > V04 no match: empty list, no selection, empty-state text repeats the request 0ms
+ ✓ tests/roomView.test.js > Room list view model (buildRoomView) > V05 invalid attendees: field error and empty-state both show the input message 0ms
+
+ Test Files  6 passed (6)
+      Tests  43 passed (43)
+   Start at  09:38:54
+   Duration  1.56s (transform 92ms, setup 0ms, collect 149ms, tests 176ms, environment 278ms, prepare 286ms)
+
+[exit code: 0]
+
+==================================================================
+evidence/10_task03_equivalence.txt
+==================================================================
+$ npx vitest run equivalence.test.js   (baseline src/ vs refactored src/, same index.html and catalog)
+EQUIVALENCE cases=2176 differences=0
+      Tests  1 passed (1)
+
+==================================================================
+evidence/11_git_status_after_build.txt
+==================================================================
+# After `npm run build` on a clean checkout (no .gitignore, dist/ tracked):
+$ git status --short
+ D dist/assets/index-CCqqJ5vM.js
+ M dist/index.html
+?? dist/assets/index-Bhoy3dMJ.js
+?? node_modules/
+
+==================================================================
+evidence/20_gemini_answer.txt
+==================================================================
+Based on the provided `CONTEXT.md`, here is a read-only risk review of the **Smart Campus** repository across correctness, maintainability, security, dependencies, and agent operations.
+
+---
+
+## 1. Correctness & Edge-Case Risks
+
+* **Timezone and DST parsing variance in `checkAvailability` (`src/availability.js`)**
+* **Risk:** `new Date(request.start)` and `new Date(b.start)` parse naive ISO strings (`"2026-10-28T09:00:00"`, missing a `Z` or offset) in the host machine's local timezone. If a test runner or browser operates in a timezone experiencing a Daylight Saving Time (DST) transition on the target day, `(end - start) / 60000` can drift by $\pm 60$ minutes, breaking the 120-minute `MAX_DURATION_MINUTES` boundary.
+
+
+* **Evidence:** `NOW_ISO = '2026-10-28T09:00:00'` and `at = (hhmm) => `${DAY}T${hhmm}:00`` in `src/rooms.js`, consumed via `new Date(...)` in `src/availability.js`.
+
+
+
+
+* **Missing defensive type/null guards on `room` and `bookings` (`src/availability.js`)**
+* **Risk:** Calling `checkAvailability` directly with `room = null`/`undefined` or `bookings = null` throws an unhandled `TypeError` (`Cannot read properties of undefined (reading 'blocked')` or `bookings is not iterable`) instead of gracefully returning `{ status: 'Unavailable', reason: ... }`.
+
+
+* **Evidence:** `if (room.blocked)` and `for (const b of bookings)` execute without nullish checks.
+
+
+
+
+* **Cross-midnight or arbitrary date inputs in `checkAvailability` (`src/availability.js`)**
+* **Risk:** While the UI restricts inputs to `<input type="time">` prefixed with `DAY`, the pure function `checkAvailability` accepts arbitrary ISO date-time strings (`request.start`, `request.end`) without verifying that the booking occurs on the same calendar day as `now` or within campus operating hours.
+
+
+* **Evidence:** `src/availability.js` checks `start < now` and `(end - start) / 60000 <= 120`, so a request for a future year or `23:30` to `00:30` the next day passes if no existing booking overlaps.
+
+
+
+
+* **Uncaught `undefined` equipment IDs in `renderRoomCard` (`src/app.js`)**
+* **Risk:** If a catalog room contains an equipment key not registered in `EQUIPMENT`, `EQUIPMENT[id]` evaluates to `undefined`, rendering blank commas in the UI (`Capacity 20 · Projector, `), whereas `emptyStateText` in `src/messages.js` explicitly falls back via `EQUIPMENT[id] ?? id`.
+
+
+* **Evidence:** Line 64 of `src/app.js` uses `room.equipment.map((id) => EQUIPMENT[id]).join(', ')`.
+
+
+
+
+* **Stale result remains visible when time inputs change (`src/app.js`)**
+* **Risk:** Changing `#start` or `#end` after submitting the form does not clear or refresh `#result` until the user clicks "Check availability" again, leaving a previous slot's result displayed alongside new input values.
+
+
+* **Evidence:** Event listeners in `src/app.js` attach to `attendees` (`input`), `equipment` (`change`), `roomList` (`change`), and `form` (`submit`), with no `input`/`change` handler on `el.start` or `el.end`.
+
+
+
+
+
+---
+
+## 2. Security & DOM Hygiene Risks
+
+* **`innerHTML` interpolation violates `AGENTS.md` coding conventions (`src/app.js`)**
+* **Risk:** `AGENTS.md` mandates: *"Build DOM text with `textContent`. Never put data into `innerHTML`."* However, `src/app.js` constructs DOM nodes via template-literal `innerHTML` in two places. Although `ROOMS` and `EQUIPMENT` are currently static and frozen, any future dynamic catalog data containing `<`, `>`, or `"` would introduce a DOM-based XSS vector.
+
+
+* **Evidence:**
+* `option.innerHTML = ` ${label}`;` (lines 24–25).
+
+
+* `card.innerHTML = `<input type="radio" ... /> ${room.name} ...`;` (lines 65–69).
+
+
+
+
+
+
+* **External third-party OpenGraph / Twitter image URLs in `index.html**`
+* **Risk:** `index.html` references `[https://bolt.new/static/og_default.png](https://bolt.new/static/og_default.png)` in `og:image` and `twitter:image` meta tags, leaking referrer metadata to an external host (`bolt.new`) when links are unfurled and failing if that asset is removed.
+
+
+* **Evidence:** Lines 8–10 of `index.html`.
+
+
+
+
+
+---
+
+## 3. Maintainability & Repository Hygiene Risks
+
+* **Missing `.gitignore` and committed build artifacts (`dist/`)**
+* **Risk:** The file tree shows no `.gitignore`, while hashed production bundle files (`dist/assets/index-CCqqJ5vM.js`, `dist/assets/index-CuTdS8qQ.css`, `dist/index.html`) are tracked in the repository. Every build changes hashed filenames, inflating diffs and risking merge conflicts or stale `dist/` artifacts if a developer forgets to rebuild before committing.
+
+
+* **Evidence:** Section 2 file tree and Section 3 note (*"There is no .gitignore, no ESLint config and no tsconfig/jsconfig"*).
+
+
+
+
+* **Missing `ACCEPTANCE.md` and `README.md` contents in review context**
+* **Assumption / Risk:** Both files appear in the file tree, and `AGENTS.md` states *"`ACCEPTANCE.md` lists AC-1..AC-5. They must stay true,"* but their contents are omitted from `CONTEXT.md`. Any reviewer or agent relying solely on `CONTEXT.md` cannot verify whether `ACCEPTANCE.md` contains edge-case stipulations beyond the comments in `src/availability.js`.
+
+
+
+
+* **No static analysis or type checking (`ESLint` / `checkJs`)**
+* **Risk:** Without ESLint or JSDoc type checking (`tsconfig.json` with `checkJs: true`), violations of repository rules (such as `innerHTML` usage, `new Date()` calls inside rule modules, or JSDoc signature drift) are not caught automatically.
+
+
+
+
+* **Implicit coupling between `src/messages.js` and `src/availability.js` / `src/rooms.js**`
+* **Risk:** `src/messages.js` imports `MAX_DURATION_MINUTES` from `./availability.js` and `EQUIPMENT` from `./rooms.js`. While acyclic today, any future import of `messages.js` inside `availability.js` or `rooms.js` would create a circular module dependency.
+
+
+
+
+
+---
+
+## 4. Dependency & Supply-Chain Risks
+
+* **Critical & moderate vulnerabilities in devDependencies (`vitest` / `tinypool`)**
+* **Risk:** `npm audit` reports 3 vulnerabilities (2 critical in `tinypool <= 2.1.1`, 1 moderate in `vitest` / `@vitest/mocker`). While `npm audit --omit=dev` shows 0 production runtime vulnerabilities (the app ships zero runtime dependencies), running test suites on untrusted code or shared CI runners exposes the build environment to the `tinypool` vulnerability.
+
+
+* **Constraint conflict:** `AGENTS.md` forbids upgrading packages without human approval of the exact `package.json` / `package-lock.json` diff, and resolving `tinypool` requires a major upgrade from `vitest` `3.2.7` to `5.x` (breaking).
+
+
+
+
+* **Major version lag across all devDependencies**
+* **Risk:** `jsdom` (`25.0.1` vs `31.0.1`), `vite` (`6.4.5` vs `8.3.8`), and `vitest` (`3.2.7` vs `5.1.1`) are behind current major releases, increasing migration effort when security patches are eventually applied.
+
+
+
+
+
+---
+
+## 5. Agent Operations & Governance Risks
+
+* **Manual `AGENTS.md` injection dependency**
+* **Risk:** `AGENTS.md` notes that the file must be pasted manually when tooling does not load it automatically. If an agent starts a session without `AGENTS.md` in context, it has no visibility into hard constraints such as keeping `T01–T10` byte-identical, working off `main`, avoiding `new Date()`, or requiring human approval before editing `tests/availability.test.js`.
+
+
+
+
+* **Prompt-injection surface via room data (`room.name`, `room.id`)**
+* **Risk:** Although `ROOMS` is currently hardcoded and deep-frozen (`src/rooms.js`), if future tasks load external or user-supplied room catalogs, `room.name` is interpolated directly into `innerHTML` in `src/app.js` and echoed into `#result` (`${text} (${room.name})`), creating both an XSS vector and a downstream text-injection surface if outputs are consumed by automated agents.
+
+
+
+
+* **Unenforced review gates (`AGENTS.md`)**
+* **Risk:** Rules prohibiting direct commits to `main`, requiring byte-identical `T01–T10` tests, and gating edits to `AGENTS.md` or `tests/availability.test.js` rely entirely on agent compliance rather than Git hooks, `CODEOWNERS`, or CI checks.
+
+
+
+
+
+---
+
+## Prioritized Remediation Summary
+
+| Priority | Issue | Location | Recommended Fix |
+| --- | --- | --- | --- |
+| **High** | `innerHTML` used with data strings (violates `AGENTS.md` + XSS risk) | `src/app.js:24, 65` | Replace `innerHTML` with `doc.createElement(...)` and `textContent`.
+
+ |
+| **Medium** | Host-timezone/DST sensitivity in ISO date parsing | `src/availability.js:15–16` | Parse explicit UTC (`Z`) or compare parsed `HH:MM` / UTC timestamps consistently.
+
+ |
+| **Medium** | Missing null/type guards on `room` and `bookings` | `src/availability.js:32, 36` | Guard `!room` and `!Array.isArray(bookings)` before property access.
+
+ |
+| **Low** | Tracked `dist/` artifacts without `.gitignore` | Repository root | Add `.gitignore` (ignoring `node_modules/`, `dist/`, `.env`) and untrack `dist/`.
+
+ |
+| **Low** | External `bolt.new` OpenGraph meta tags & missing `lint` script | `index.html:8–10`, `package.json` | Remove/replace external `bolt.new` URLs; add a lightweight lint or `tsc --noEmit` check.
+
+ |
+==================================================================
+evidence/21_verify_gemini.txt
+==================================================================
+# Verification of Gemini findings G1-G5 on the reviewed version (commit 383fee9)
+
+$ TZ=UTC npx vitest run verify_gemini.test.js
+G1 TZ=UTC DST-day 2h wall clock -> OK; app day 10:00-12:00 -> OK
+G2 room=null -> throws TypeError: Cannot read properties of null (reading 'blocked')
+G2 bookings=null -> throws TypeError: bookings is not iterable
+G3 function, 2027-03-01 10:00-11:00 -> {"status":"Available","reason":"OK"}
+G3 function, 23:30 -> next day 00:30 -> {"status":"Available","reason":"OK"}
+G3 UI 23:30-00:30 -> Unavailable: The start time must be earlier than the end time. (Seminar Room 101)
+G5 after 11:00-12:00 check: "Available: The room is free for this time slot. (Seminar Room 101)" | after editing to 10:00-10:30 (no submit): hidden=false "Available: The room is free for this time slot. (Seminar Room 101)"
+G5 after pressing the button again: "Unavailable: This time overlaps with an existing booking. (Seminar Room 101)"
+      Tests  5 passed (5)
+
+$ TZ=Asia/Almaty npx vitest run verify_gemini.test.js
+G1 TZ=Asia/Almaty DST-day 2h wall clock -> OK; app day 10:00-12:00 -> OK
+G2 room=null -> throws TypeError: Cannot read properties of null (reading 'blocked')
+G2 bookings=null -> throws TypeError: bookings is not iterable
+G3 function, 2027-03-01 10:00-11:00 -> {"status":"Available","reason":"OK"}
+G3 function, 23:30 -> next day 00:30 -> {"status":"Available","reason":"OK"}
+G3 UI 23:30-00:30 -> Unavailable: The start time must be earlier than the end time. (Seminar Room 101)
+G5 after 11:00-12:00 check: "Available: The room is free for this time slot. (Seminar Room 101)" | after editing to 10:00-10:30 (no submit): hidden=false "Available: The room is free for this time slot. (Seminar Room 101)"
+G5 after pressing the button again: "Unavailable: This time overlaps with an existing booking. (Seminar Room 101)"
+      Tests  5 passed (5)
+
+$ TZ=Europe/London npx vitest run verify_gemini.test.js
+G1 TZ=Europe/London DST-day 2h wall clock -> TOO_LONG; app day 10:00-12:00 -> OK
+G2 room=null -> throws TypeError: Cannot read properties of null (reading 'blocked')
+G2 bookings=null -> throws TypeError: bookings is not iterable
+G3 function, 2027-03-01 10:00-11:00 -> {"status":"Available","reason":"OK"}
+G3 function, 23:30 -> next day 00:30 -> {"status":"Available","reason":"OK"}
+G3 UI 23:30-00:30 -> Unavailable: The start time must be earlier than the end time. (Seminar Room 101)
+G5 after 11:00-12:00 check: "Available: The room is free for this time slot. (Seminar Room 101)" | after editing to 10:00-10:30 (no submit): hidden=false "Available: The room is free for this time slot. (Seminar Room 101)"
+G5 after pressing the button again: "Unavailable: This time overlaps with an existing booking. (Seminar Room 101)"
+      Tests  5 passed (5)
+
+$ TZ=America/New_York npx vitest run verify_gemini.test.js
+G1 TZ=America/New_York DST-day 2h wall clock -> OK; app day 10:00-12:00 -> OK
+G2 room=null -> throws TypeError: Cannot read properties of null (reading 'blocked')
+G2 bookings=null -> throws TypeError: bookings is not iterable
+G3 function, 2027-03-01 10:00-11:00 -> {"status":"Available","reason":"OK"}
+G3 function, 23:30 -> next day 00:30 -> {"status":"Available","reason":"OK"}
+G3 UI 23:30-00:30 -> Unavailable: The start time must be earlier than the end time. (Seminar Room 101)
+G5 after 11:00-12:00 check: "Available: The room is free for this time slot. (Seminar Room 101)" | after editing to 10:00-10:30 (no submit): hidden=false "Available: The room is free for this time slot. (Seminar Room 101)"
+G5 after pressing the button again: "Unavailable: This time overlaps with an existing booking. (Seminar Room 101)"
+      Tests  5 passed (5)
+
+# Original suite in 4 timezones
+$ TZ=UTC npx vitest run (project)
+      Tests  43 passed (43)
+$ TZ=Asia/Almaty npx vitest run (project)
+      Tests  43 passed (43)
+$ TZ=Europe/London npx vitest run (project)
+      Tests  43 passed (43)
+$ TZ=America/New_York npx vitest run (project)
+      Tests  43 passed (43)
+
+==================================================================
+evidence/30_M2_tests_before_fix.txt
+==================================================================
+# R02 new tests run against the UNFIXED src/ (commit 383fee9) - expected to fail
+$ npx vitest run tests/availability.extra.test.js tests/catalog.test.js
+ ✓ tests/catalog.test.js (4 tests) 4ms
+   ✓ AC1 — missing or unreadable times (found by a probe on the baseline) > A01 empty start/end is Unavailable, not Available 2ms
+   ✓ AC1 — missing or unreadable times (found by a probe on the baseline) > A02 text that is not a date is Unavailable 0ms
+   ✓ Boundaries on catalog rooms > A03 exactly 120 minutes is Available, 121 minutes is TOO_LONG (AC2) 0ms
+   ✓ Boundaries on catalog rooms > A04 touching is Available, overlapping by one minute is OVERLAP (AC4) 0ms
+   ✓ F3 / F5 — the chosen room decides the answer > A05 a blocked catalog room is never Available, even for a free slot (F3, AC3) 1ms
+   ✓ F3 / F5 — the chosen room decides the answer > A06 the same slot gives different answers for different rooms, using each room's own bookings (F5) 0ms
+   ✓ F3 / F5 — the chosen room decides the answer > A07 many checks do not change any room or booking (AC5) 0ms
+   × R02 — broken booking data fails closed > A08 a booking with an unreadable or missing time makes the slot Unavailable 8ms
+   × R02 — broken booking data fails closed > A09 a booking whose end is not after its start is treated as broken; other rooms are still ignored 2ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  tests/availability.extra.test.js > R02 — broken booking data fails closed > A08 a booking with an unreadable or missing time makes the slot Unavailable
+AssertionError: expected { status: 'Available', reason: 'OK' } to deeply equal { status: 'Unavailable', …(1) }
+ FAIL  tests/availability.extra.test.js > R02 — broken booking data fails closed > A09 a booking whose end is not after its start is treated as broken; other rooms are still ignored
+AssertionError: expected 'OK' to be 'INVALID_BOOKING_DATA' // Object.is equality
+      Tests  2 failed | 11 passed (13)
+
+==================================================================
+evidence/31_M2_tests_after_fix.txt
+==================================================================
+# R02 same tests with the fix
+$ npx vitest run tests/availability.extra.test.js tests/catalog.test.js
+      Tests  13 passed (13)
+
+==================================================================
+evidence/32_M2_diff.patch
+==================================================================
+diff --git a/src/availability.js b/src/availability.js
+index 33c5fa0..87f611c 100644
+--- a/src/availability.js
++++ b/src/availability.js
+@@ -39,6 +39,11 @@ export function checkAvailability(request, room, bookings, now) {
+     if (b.roomId !== room.id) continue;
+     const bStart = new Date(b.start);
+     const bEnd = new Date(b.end);
++    // A5 mitigation R02: a booking we cannot read must block the slot (fail closed).
++    // Before, every comparison with NaN was false, so a broken booking was silently ignored -> Available.
++    if (Number.isNaN(bStart.getTime()) || Number.isNaN(bEnd.getTime()) || bStart >= bEnd) {
++      return { status: 'Unavailable', reason: 'INVALID_BOOKING_DATA' };
++    }
+     // FIX BUG-A: strict < and > — "10:00-11:00" and "11:00-12:00" do NOT conflict
+     if (start < bEnd && end > bStart) {
+       return { status: 'Unavailable', reason: 'OVERLAP' };
+diff --git a/src/messages.js b/src/messages.js
+index 788d530..af4c6c1 100644
+--- a/src/messages.js
++++ b/src/messages.js
+@@ -10,6 +10,7 @@ export const MESSAGES = {
+   TOO_LONG: `A booking can last at most ${MAX_DURATION_MINUTES} minutes.`,
+   ROOM_BLOCKED: 'This room is blocked and cannot be booked right now.',
+   OVERLAP: 'This time overlaps with an existing booking.',
++  INVALID_BOOKING_DATA: 'This room has a booking with an unreadable time, so it cannot be checked. Please contact the campus office.',
+ };
+ 
+ /** "2026-10-28T14:00:00" -> "14:00" */
+diff --git a/tests/availability.extra.test.js b/tests/availability.extra.test.js
+index 510a6ac..f43a9c0 100644
+--- a/tests/availability.extra.test.js
++++ b/tests/availability.extra.test.js
+@@ -59,3 +59,27 @@ describe('F3 / F5 — the chosen room decides the answer', () => {
+     expect(ROOMS).toEqual(snapshot);
+   });
+ });
++
++// Assignment #05, mitigation R02: unreadable booking data must not produce "Available"
++describe('R02 — broken booking data fails closed', () => {
++  const room = { id: 'X', blocked: false };
++  const now = new Date('2026-10-28T09:00:00');
++  const req = { start: '2026-10-28T10:00:00', end: '2026-10-28T11:00:00' };
++
++  it('A08 a booking with an unreadable or missing time makes the slot Unavailable', () => {
++    for (const bad of [
++      { id: 'B', roomId: 'X', start: 'not-a-date', end: '2026-10-28T12:00:00' },
++      { id: 'B', roomId: 'X', start: '2026-10-28T09:30:00' },
++      { id: 'B', roomId: 'X', start: '2026-10-28T10:0:00', end: '2026-10-28T11:00:00' },
++    ]) {
++      expect(checkAvailability(req, room, [bad], now)).toEqual({ status: 'Unavailable', reason: 'INVALID_BOOKING_DATA' });
++    }
++  });
++
++  it('A09 a booking whose end is not after its start is treated as broken; other rooms are still ignored', () => {
++    const backwards = { id: 'B', roomId: 'X', start: '2026-10-28T15:00:00', end: '2026-10-28T14:00:00' };
++    expect(checkAvailability(req, room, [backwards], now).reason).toBe('INVALID_BOOKING_DATA');
++    const otherRoom = { id: 'B', roomId: 'Y', start: 'not-a-date', end: 'x' };
++    expect(checkAvailability(req, room, [otherRoom], now)).toEqual({ status: 'Available', reason: 'OK' });
++  });
++});
+diff --git a/tests/catalog.test.js b/tests/catalog.test.js
+index e88551e..78c7744 100644
+--- a/tests/catalog.test.js
++++ b/tests/catalog.test.js
+@@ -33,3 +33,17 @@ describe('Room catalog (data model)', () => {
+     expect(() => room.bookings.push({})).toThrow(TypeError);
+   });
+ });
++
++describe('Room catalog — booking times (Assignment #05, R02)', () => {
++  it('C04 every booking in the catalog has readable times with start before end', () => {
++    for (const room of ROOMS) {
++      for (const b of room.bookings) {
++        const start = new Date(b.start);
++        const end = new Date(b.end);
++        expect(Number.isNaN(start.getTime()), `${b.id} start`).toBe(false);
++        expect(Number.isNaN(end.getTime()), `${b.id} end`).toBe(false);
++        expect(start < end, `${b.id} start < end`).toBe(true);
++      }
++    }
++  });
++});
+
+==================================================================
+evidence/33_M1_test_before_fix.txt
+==================================================================
+# R01 new test run against the UNFIXED src/app.js - expected to fail
+$ npx vitest run tests/ui.test.js
+   × R01 — no stale answer after the times change > U09 editing the start or end time hides the previous answer until the user checks again 20ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+AssertionError: expected false to be true // Object.is equality
+      Tests  1 failed | 8 passed (9)
+
+==================================================================
+evidence/34_M1_test_after_fix.txt
+==================================================================
+# R01 same test with the fix
+$ npx vitest run tests/ui.test.js
+      Tests  9 passed (9)
+
+==================================================================
+evidence/35_M1_diff.patch
+==================================================================
+diff --git a/src/app.js b/src/app.js
+index f849a58..cb7aa79 100644
+--- a/src/app.js
++++ b/src/app.js
+@@ -109,6 +109,9 @@ export function createApp(doc, { rooms, now, nowIso, day }) {
+     renderRoomDetails();
+     if (!el.result.hidden) showResult(); // F5
+   });
++  // A5 mitigation R01: an old answer must not stay next to new times -> hide it until the next check
++  el.start.addEventListener('input', hideResult);
++  el.end.addEventListener('input', hideResult);
+   el.form.addEventListener('submit', (event) => {
+     event.preventDefault();
+     showResult();
+diff --git a/tests/ui.test.js b/tests/ui.test.js
+index a3deba9..52b543d 100644
+--- a/tests/ui.test.js
++++ b/tests/ui.test.js
+@@ -100,3 +100,21 @@ describe('UI — filtering, empty state and room switching', () => {
+     expect(check('', '')).toBe('Unavailable: Enter both a start time and an end time. (Computer Lab 303)');
+   });
+ });
++
++// Assignment #05, mitigation R01: an answer must never be shown next to times it was not computed for
++describe('R01 — no stale answer after the times change', () => {
++  function typeTime(id, value) {
++    $(id).value = value;
++    $(id).dispatchEvent(new Event('input', { bubbles: true }));
++  }
++
++  it('U09 editing the start or end time hides the previous answer until the user checks again', () => {
++    expect(check('11:00', '12:00')).toMatch(/^Available/);
++    typeTime('start', '10:00'); // 10:00-12:00 would overlap B1 (10:00-11:00)
++    expect($('result').hidden).toBe(true);
++    expect($('result').textContent).toBe('');
++    expect(check('10:00', '10:30')).toBe('Unavailable: This time overlaps with an existing booking. (Seminar Room 101)');
++    typeTime('end', '11:30');
++    expect($('result').hidden).toBe(true);
++  });
++});
+
+==================================================================
+evidence/36_M1_chrome_screens.txt
+==================================================================
+# Headless Chrome (google-chrome via Playwright), production builds of 383fee9 (before M1) and b9ef368 (after M1)
+# Steps: check 11:00-12:00, then type 10:00-10:30 without pressing the button (10:00-10:30 overlaps B1 10:00-11:00)
+shots/R01_before.png result hidden = False | text = Available: The room is free for this time slot. (Seminar Room 101)
+shots/R01_after.png result hidden = True | text = 
+
+==================================================================
+evidence/40_final_test.txt
+==================================================================
+$ npx vitest run --reporter=verbose
+
+ RUN  v3.2.7 /home/claude/work/a5/repo
+
+ ✓ tests/ui.test.js > UI — filtering, empty state and room switching > U01 shows all rooms at start, the blocked one with a label, and no result yet 42ms
+ ✓ tests/ui.test.js > UI — filtering, empty state and room switching > U02 capacity + equipment filters update the visible list (F1, F2) 21ms
+ ✓ tests/ui.test.js > UI — filtering, empty state and room switching > U03 no match shows a clear empty state and disables the check (F4) 17ms
+ ✓ tests/ui.test.js > UI — filtering, empty state and room switching > U04 invalid attendees text gives a field message instead of a list 10ms
+ ✓ tests/ui.test.js > UI — filtering, empty state and room switching > U05 switching the room refreshes the answer with that room's bookings (F5) 16ms
+ ✓ tests/ui.test.js > UI — filtering, empty state and room switching > U06 the blocked room is never shown as available in the UI (F3) 21ms
+ ✓ tests/ui.test.js > UI — filtering, empty state and room switching > U07 a filter that removes the selected room moves the selection and refreshes the answer (F5) 25ms
+ ✓ tests/ui.test.js > UI — filtering, empty state and room switching > U08 original messages still appear: 120 vs 121 minutes, empty fields (AC2, AC6) 10ms
+ ✓ tests/ui.test.js > R01 — no stale answer after the times change > U09 editing the start or end time hides the previous answer until the user checks again 12ms
+ ✓ tests/filters.test.js > F1 — capacity filter > F01 exact capacity is enough: 20 attendees keep Seminar Room 101 (capacity 20) 1ms
+ ✓ tests/filters.test.js > F1 — capacity filter > F02 insufficient capacity: 21 attendees remove R-101 (20) but keep R-202 (80) and R-303 (30) 1ms
+ ✓ tests/filters.test.js > F1 — capacity filter > F03 meetsCapacity boundary: capacity 8 fits 8, not 9 0ms
+ ✓ tests/filters.test.js > F2 — equipment filter (ALL selected items required) > F04 projector + computers keeps only Computer Lab 303 0ms
+ ✓ tests/filters.test.js > F2 — equipment filter (ALL selected items required) > F05 a room with only SOME of the items is excluded 0ms
+ ✓ tests/filters.test.js > F2 — equipment filter (ALL selected items required) > F06 no equipment selected -> only capacity decides; all rooms for 1 attendee 0ms
+ ✓ tests/filters.test.js > F3 / F4 — blocked rooms and empty result > F07 a blocked room that matches is still listed (it is labelled Blocked, not hidden) 0ms
+ ✓ tests/filters.test.js > F3 / F4 — blocked rooms and empty result > F08 no match returns an empty array (UI shows the empty state) 0ms
+ ✓ tests/filters.test.js > F3 / F4 — blocked rooms and empty result > F09 filtering returns a new array and does not change the catalog 1ms
+ ✓ tests/filters.test.js > Attendees input parsing > F10 accepts whole numbers >= 1 and rejects 0, negatives, decimals, text and empty 0ms
+ ✓ tests/roomView.test.js > Room list view model (buildRoomView) > V01 valid input: lists matching rooms, selects the first one, no error or empty text 2ms
+ ✓ tests/roomView.test.js > Room list view model (buildRoomView) > V02 keeps the current selection while it still matches 0ms
+ ✓ tests/roomView.test.js > Room list view model (buildRoomView) > V03 drops a selection that no longer matches and picks the first match 0ms
+ ✓ tests/roomView.test.js > Room list view model (buildRoomView) > V04 no match: empty list, no selection, empty-state text repeats the request 0ms
+ ✓ tests/roomView.test.js > Room list view model (buildRoomView) > V05 invalid attendees: field error and empty-state both show the input message 0ms
+ ✓ tests/availability.test.js > AC1 — valid time range > T01 rejects start >= end 1ms
+ ✓ tests/availability.test.js > AC1 — valid time range > T02 rejects requests in the past 0ms
+ ✓ tests/availability.test.js > AC2 — max duration 120 min > T03 allows exactly 120 minutes 0ms
+ ✓ tests/availability.test.js > AC2 — max duration 120 min > T04 rejects 121 minutes 0ms
+ ✓ tests/availability.test.js > AC3 — blocked room > T05 rejects a blocked room 0ms
+ ✓ tests/availability.test.js > AC4 — overlaps > T06 rejects a real overlap 0ms
+ ✓ tests/availability.test.js > AC4 — overlaps > T07 (BUG-A) allows a booking that starts exactly when another ends 0ms
+ ✓ tests/availability.test.js > AC4 — overlaps > T08 (BUG-A) allows a booking that ends exactly when another starts 0ms
+ ✓ tests/availability.test.js > AC4 — overlaps > T09 ignores bookings of other rooms 0ms
+ ✓ tests/availability.test.js > AC5 — no mutation of booking data > T10 (BUG-B) does not change the original bookings array 1ms
+ ✓ tests/availability.extra.test.js > AC1 — missing or unreadable times (found by a probe on the baseline) > A01 empty start/end is Unavailable, not Available 1ms
+ ✓ tests/availability.extra.test.js > AC1 — missing or unreadable times (found by a probe on the baseline) > A02 text that is not a date is Unavailable 0ms
+ ✓ tests/availability.extra.test.js > Boundaries on catalog rooms > A03 exactly 120 minutes is Available, 121 minutes is TOO_LONG (AC2) 0ms
+ ✓ tests/availability.extra.test.js > Boundaries on catalog rooms > A04 touching is Available, overlapping by one minute is OVERLAP (AC4) 0ms
+ ✓ tests/availability.extra.test.js > F3 / F5 — the chosen room decides the answer > A05 a blocked catalog room is never Available, even for a free slot (F3, AC3) 1ms
+ ✓ tests/availability.extra.test.js > F3 / F5 — the chosen room decides the answer > A06 the same slot gives different answers for different rooms, using each room's own bookings (F5) 0ms
+ ✓ tests/availability.extra.test.js > F3 / F5 — the chosen room decides the answer > A07 many checks do not change any room or booking (AC5) 0ms
+ ✓ tests/availability.extra.test.js > R02 — broken booking data fails closed > A08 a booking with an unreadable or missing time makes the slot Unavailable 0ms
+ ✓ tests/availability.extra.test.js > R02 — broken booking data fails closed > A09 a booking whose end is not after its start is treated as broken; other rooms are still ignored 0ms
+ ✓ tests/catalog.test.js > Room catalog (data model) > C01 has at least four rooms with id, name, capacity, equipment, blocked and bookings 1ms
+ ✓ tests/catalog.test.js > Room catalog (data model) > C02 room ids are unique, every booking belongs to its own room, equipment ids are known 1ms
+ ✓ tests/catalog.test.js > Room catalog (data model) > C03 catalog data is frozen, so it cannot be changed by mistake (AC5) 0ms
+ ✓ tests/catalog.test.js > Room catalog — booking times (Assignment #05, R02) > C04 every booking in the catalog has readable times with start before end 0ms
+
+ Test Files  6 passed (6)
+      Tests  47 passed (47)
+   Start at  09:47:05
+   Duration  1.69s (transform 107ms, setup 0ms, collect 171ms, tests 200ms, environment 297ms, prepare 291ms)
+
+[exit code: 0]
+
+==================================================================
+evidence/41_final_build.txt
+==================================================================
+$ npm run build
+
+> smart-campus-practice09@1.0.0 build
+> vite build
+
+vite v6.4.5 building for production...
+transforming...
+✓ 10 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                 2.63 kB │ gzip: 1.00 kB
+dist/assets/index-CuTdS8qQ.css  2.49 kB │ gzip: 0.96 kB
+dist/assets/index-D0Sbpj3D.js   6.99 kB │ gzip: 2.91 kB
+✓ built in 629ms
+[exit code: 0]
+
+==================================================================
+evidence/42_final_clean_clone.txt
+==================================================================
+# Final checks on a fresh clone of commit b9ef368
+
+$ npm ci
+27 packages are looking for funding
+  run `npm fund` for details
+3 vulnerabilities (1 moderate, 2 critical)
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+Run `npm audit` for details.
+[exit code: 0]
+
+$ npx vitest run
+ ✓ tests/catalog.test.js (4 tests) 4ms
+ ✓ tests/roomView.test.js (5 tests) 5ms
+ Test Files  6 passed (6)
+      Tests  47 passed (47)
+   Start at  09:52:55
+   Duration  1.65s (transform 100ms, setup 0ms, collect 147ms, tests 177ms, environment 338ms, prepare 289ms)
+[exit code: 0]
+
+$ npm run build
+rendering chunks...
+computing gzip size...
+dist/index.html                 2.63 kB │ gzip: 1.00 kB
+dist/assets/index-CuTdS8qQ.css  2.49 kB │ gzip: 0.96 kB
+dist/assets/index-D0Sbpj3D.js   6.99 kB │ gzip: 2.91 kB
+✓ built in 138ms
+[exit code: 0]
+
+$ npm run lint
+npm error Did you mean this?
+npm error   npm link # Symlink a package folder
+npm error
+npm error To see a list of scripts, run:
+npm error   npm run
+npm error A complete log of this run can be found in: /home/claude/.npm/_logs/2026-11-19T04_52_57_626Z-debug-0.log
+[exit code: 1]
+
+$ npm audit --omit=dev
+found 0 vulnerabilities
+[exit code: 0]
+
+$ npm audit
+fix available via `npm audit fix --force`
+Will install vitest@5.1.1, which is a breaking change
+node_modules/tinypool
+3 vulnerabilities (1 moderate, 2 critical)
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+[exit code: 1]
+
+$ git status --short   (after npm run build)
+ D dist/assets/index-CCqqJ5vM.js
+ M dist/index.html
+?? dist/assets/index-D0Sbpj3D.js
+?? node_modules/
+
+==================================================================
+evidence/git_log.txt
+==================================================================
+* b9ef368 2026-11-19 09:52 docs: README matches the Assignment #05 version (commands, 47 tests, layout)
+*   beb492c 2026-11-19 09:52 merge a5-mitigations: R01 + R02 approved by Aitkhozha Ilyas after diff review
+|\  
+| * 0e2d8af 2026-11-19 09:47 fix(R01): hide the previous answer when start/end time changes + test U09
+| * 3c81d85 2026-11-19 09:46 fix(R02): broken booking data makes the slot Unavailable (fail closed) + tests A08, A09, C04
+|/  
+* 383fee9 2026-11-19 09:38 refactor: extract room-list rules from app.js render() into pure roomView.js (Task 03)
+* e10a411 2026-11-19 09:38 docs: add AGENTS.md and ACCEPTANCE.md (Task 02)
+* a75f892 2026-11-19 09:36 baseline: Assignment #04 final as exported from Bolt (sb1-ksdzccp5)
+
+==================================================================
+CONTEXT.md
+==================================================================
+# CONTEXT for a read-only risk review — Smart Campus (Vite + vanilla JS)
+
+This is the full context of a small repository. You cannot run anything. Base every claim on the text below and mark assumptions.
+
+## 1. AGENTS.md (repository instructions, pasted manually because this chat does not load repository files)
+
+```markdown
+# AGENTS.md — instructions for coding agents
+
+Read this file before you change anything. If your tool does not load it automatically, the human pastes it into the chat.
+
+## Purpose
+Smart Campus is a small demo app. A student picks a room that fits a group (capacity and equipment), then checks if a time slot is free.
+The app only answers Available or Unavailable and gives a reason. It never creates or saves a booking.
+All data is fictional and lives in `src/rooms.js`. The current time is fixed at 2026-10-28 09:00. The app has no backend, login, API or database.
+
+## Architecture (keep these boundaries)
+| File | Role | Rule |
+|---|---|---|
+| `src/rooms.js` | Data: rooms, bookings, equipment, fixed NOW | Data only. The catalog is deep-frozen. |
+| `src/availability.js` | Booking rules AC-1..AC-3 | Pure function. No DOM and no imports from the UI. |
+| `src/filters.js` | Filter rules (capacity, equipment) | Pure function. Never mutates its input. |
+| `src/roomView.js` | Room-list view model (selection, empty state) | Pure function. No DOM. |
+| `src/messages.js` | All user-facing text | Every new message goes here. |
+| `src/app.js` | DOM rendering and events only | No business rules in this file. |
+| `src/main.js` | Entry point | Wiring only. |
+| `tests/*.test.js` | Vitest tests (`ui.test.js` uses jsdom) | |
+
+## Setup and safe commands
+Node 18+ (verified with Node 22). Run all commands from the repository root.
+
+| Command | Purpose | Expected |
+|---|---|---|
+| `npm ci` | Install the exact versions from `package-lock.json` | exit 0 |
+| `npm test` | Run all tests | 0 failed |
+| `npx vitest run --reporter=verbose` | Same tests, one line per test | 0 failed |
+| `npm run build` | Production build into `dist/` | exit 0 |
+| `npm run dev` | Local dev server | only when a human asks for it |
+| `git status`, `git diff` | Review your changes | always before you report |
+
+## Coding conventions
+- Plain ES modules and vanilla JavaScript. Do not add a framework or TypeScript unless a human asks for it.
+- Rules are pure functions that take their inputs as arguments. Pass time in as `now`; never call `new Date()` for the current time inside a rule.
+- Never mutate the catalog, the bookings or any input array. Return new arrays.
+- Build DOM text with `textContent`. Never put data into `innerHTML`.
+- All user-facing text goes in `src/messages.js`.
+- Make small, focused changes: one concern per change. Do not reformat files you do not need to touch.
+
+## Test expectations
+- Every rule change needs a test that fails before the fix and passes after it. Name it with the next free ID in that file, e.g. `A08`.
+- Do not delete, skip (`.skip`, `.only`) or weaken existing tests. Tests T01–T10 are the original contract and must stay byte-identical.
+- Before you report, run `npm test` and `npm run build` and paste the real summary lines (`Tests  N passed (N)`, build exit code). Never claim a result you did not run.
+- `ACCEPTANCE.md` lists AC-1..AC-5. They must stay true.
+
+## Forbidden actions (stop and ask a human)
+- **Secrets:** never add API keys, tokens, passwords, `.env` files or real personal data. All data stays fictional.
+- **Deployment:** no deploys or publishing of any kind (Bolt publish, `npm publish`, hosting, DNS).
+- **Destructive commands:** no `rm -rf` outside `dist/` or `node_modules/`, no `git push --force`, no `git reset --hard` on shared branches, no history rewriting, no deleting tests.
+- **Dependencies:** do not add, remove or upgrade packages, and do not run `npm audit fix` or `npm audit fix --force`, without human review of the exact `package.json` and `package-lock.json` diff.
+- **Network:** do not change the app to call any external service.
+- **Scope:** do not touch files outside this repository, and do not edit `package-lock.json` by hand.
+
+## Review gates
+1. Work on a branch, never directly on `main`.
+2. A human reviews the diff, the test output and the build output before any merge.
+3. Any change to `package.json`, `package-lock.json`, `AGENTS.md` or `tests/availability.test.js` needs explicit human approval.
+4. If a check fails and you cannot fix it within the task scope, stop and report the failure. Do not work around it.
+
+## What to report after a task
+A short change summary, the list of files changed, `git diff --stat`, the real `npm test` and `npm run build` output, and any risks or open questions.
+```
+
+## 2. File tree (excluding node_modules)
+```
+.gitkeep
+ACCEPTANCE.md
+AGENTS.md
+README.md
+dist/assets/index-CCqqJ5vM.js
+dist/assets/index-CuTdS8qQ.css
+dist/index.html
+index.html
+package-lock.json
+package.json
+src/app.js
+src/availability.js
+src/filters.js
+src/main.js
+src/messages.js
+src/roomView.js
+src/rooms.js
+src/style.css
+tests/availability.extra.test.js
+tests/availability.test.js
+tests/catalog.test.js
+tests/filters.test.js
+tests/roomView.test.js
+tests/ui.test.js
+```
+
+## 3. package.json
+```json
+{
+  "name": "smart-campus-practice09",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "jsdom": "^25.0.1",
+    "vite": "^6.4.1",
+    "vitest": "^3.2.4"
+  }
+}
+```
+
+Resolved versions in package-lock.json: vite 6.4.5, vitest 3.2.7, jsdom 25.0.1, esbuild 0.25.12, rollup 4.68.0. There is no .gitignore, no ESLint config and no tsconfig/jsconfig.
+
+## File: index.html
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Campus — Room availability</title>
+    <link rel="stylesheet" href="/src/style.css" />
+    <meta property="og:image" content="https://bolt.new/static/og_default.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://bolt.new/static/og_default.png">
+  </head>
+  <body>
+    <main class="page">
+      <header class="header">
+        <h1>Smart Campus</h1>
+        <p class="subtitle">Find a room that fits your group, then check if a time slot is free.</p>
+      </header>
+
+      <section class="card" aria-labelledby="filter-title">
+        <h2 id="filter-title">1. Your requirements</h2>
+        <label>Number of attendees
+          <input id="attendees" type="number" min="1" step="1" value="1" inputmode="numeric" />
+        </label>
+        <p id="filter-error" class="field-error" role="alert" hidden></p>
+        <fieldset class="equipment">
+          <legend>Required equipment (room must have all)</legend>
+          <div id="equipment-options" class="chips"></div>
+        </fieldset>
+      </section>
+
+      <section class="card" aria-labelledby="rooms-title">
+        <h2 id="rooms-title">2. Choose a room</h2>
+        <p id="room-count" class="meta"></p>
+        <div id="room-list" class="room-list" role="radiogroup" aria-labelledby="rooms-title"></div>
+        <p id="empty-state" class="empty-state" role="status" hidden></p>
+      </section>
+
+      <section class="card" aria-labelledby="form-title">
+        <h2 id="form-title">3. Check a time slot</h2>
+        <p class="meta">Room: <strong id="selected-room">none selected</strong></p>
+        <p class="meta">Current time (fixed for the demo): <strong id="now-label"></strong></p>
+        <h3>Existing bookings in this room</h3>
+        <ul id="booking-list" class="booking-list"></ul>
+        <form id="check-form" novalidate>
+          <div class="row">
+            <label>Start time
+              <input id="start" type="time" step="300" required />
+            </label>
+            <label>End time
+              <input id="end" type="time" step="300" required />
+            </label>
+          </div>
+          <button id="check-button" type="submit">Check availability</button>
+        </form>
+        <div id="result" class="result" role="status" aria-live="polite" hidden></div>
+      </section>
+    </main>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
+
+```
+
+## File: src/rooms.js
+```js
+// Smart Campus — fictional room catalog (data only, no logic besides freezing).
+// Every room owns its bookings, so an availability check can only use the chosen room's data (F5).
+
+export const DAY = '2026-10-28';
+export const NOW_ISO = '2026-10-28T09:00:00'; // fixed "current time" for the demo
+export const NOW = new Date(NOW_ISO);
+
+/** Equipment that a user can require (id -> label shown in the UI). */
+export const EQUIPMENT = Object.freeze({
+  projector: 'Projector',
+  whiteboard: 'Whiteboard',
+  computers: 'Computers',
+  video: 'Video conferencing',
+  microphone: 'Microphone',
+});
+
+const at = (hhmm) => `${DAY}T${hhmm}:00`;
+
+/** Recursively freezes plain objects/arrays so booking data cannot be changed (AC5). */
+export function deepFreeze(value) {
+  if (value && typeof value === 'object' && !Object.isFrozen(value)) {
+    Object.freeze(value);
+    for (const key of Object.keys(value)) deepFreeze(value[key]);
+  }
+  return value;
+}
+
+export const ROOMS = deepFreeze([
+  {
+    id: 'R-101',
+    name: 'Seminar Room 101',
+    capacity: 20,
+    equipment: ['projector', 'whiteboard'],
+    blocked: false,
+    // same two bookings as the original single-room version (order kept: B2 before B1)
+    bookings: [
+      { id: 'B2', roomId: 'R-101', start: at('14:00'), end: at('15:00') },
+      { id: 'B1', roomId: 'R-101', start: at('10:00'), end: at('11:00') },
+    ],
+  },
+  {
+    id: 'R-202',
+    name: 'Lecture Hall 202',
+    capacity: 80,
+    equipment: ['projector', 'microphone', 'video'],
+    blocked: false,
+    bookings: [
+      { id: 'B3', roomId: 'R-202', start: at('09:30'), end: at('11:30') },
+      { id: 'B4', roomId: 'R-202', start: at('12:00'), end: at('13:30') },
+    ],
+  },
+  {
+    id: 'R-303',
+    name: 'Computer Lab 303',
+    capacity: 30,
+    equipment: ['computers', 'projector', 'whiteboard'],
+    blocked: false,
+    bookings: [{ id: 'B5', roomId: 'R-303', start: at('13:00'), end: at('15:00') }],
+  },
+  {
+    id: 'R-404',
+    name: 'Meeting Room 404',
+    capacity: 8,
+    equipment: ['whiteboard', 'video'],
+    blocked: false,
+    bookings: [{ id: 'B6', roomId: 'R-404', start: at('16:00'), end: at('17:00') }],
+  },
+  {
+    id: 'R-505',
+    name: 'Media Studio 505',
+    capacity: 12,
+    equipment: ['projector', 'video', 'microphone'],
+    blocked: true, // closed for maintenance: never available (F3 / AC3)
+    bookings: [],
+  },
+]);
+
+/** Returns the room with this id, or undefined. */
+export function findRoom(rooms, id) {
+  return rooms.find((room) => room.id === id);
+}
+
+```
+
+## File: src/availability.js
+```js
+// Smart Campus — booking / availability rules (AC1-AC5). Pure: no DOM, no data of its own.
+// History: Practice #08 fixed BUG-A (strict < and > in the overlap test) and BUG-B (in-place sort).
+// Assignment #04: INVALID_TIME guard added; the unnecessary sort was removed.
+
+export const MAX_DURATION_MINUTES = 120;
+
+/**
+ * Checks whether a room can be booked for [start, end).
+ * @param {{start: string, end: string}} request  ISO date-time strings
+ * @param {{id: string, blocked: boolean}} room
+ * @param {Array<{id: string, roomId: string, start: string, end: string}>} bookings
+ * @param {Date} now  fixed "current time" (injected so tests are deterministic)
+ * @returns {{status: 'Available'|'Unavailable', reason: string}}
+ */
+export function checkAvailability(request, room, bookings, now) {
+  const start = new Date(request.start);
+  const end = new Date(request.end);
+
+  // AC1: missing or unreadable times are never Available
+  // (before this guard every comparison with NaN was false and the function returned Available)
+  if (!request.start || !request.end || Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
+    return { status: 'Unavailable', reason: 'INVALID_TIME' };
+  }
+
+  // AC1: start must be before end, and not in the past
+  if (start >= end) return { status: 'Unavailable', reason: 'START_NOT_BEFORE_END' };
+  if (start < now) return { status: 'Unavailable', reason: 'IN_THE_PAST' };
+
+  // AC2: maximum duration 120 minutes
+  const minutes = (end - start) / 60000;
+  if (minutes > MAX_DURATION_MINUTES) return { status: 'Unavailable', reason: 'TOO_LONG' };
+
+  // AC3: blocked room
+  if (room.blocked) return { status: 'Unavailable', reason: 'ROOM_BLOCKED' };
+
+  // AC4: overlap check. The order of bookings does not matter (we stop at the first conflict),
+  // so no sorting is needed; the bookings array is only read, never changed (AC5, former BUG-B).
+  for (const b of bookings) {
+    if (b.roomId !== room.id) continue;
+    const bStart = new Date(b.start);
+    const bEnd = new Date(b.end);
+    // FIX BUG-A: strict < and > — "10:00-11:00" and "11:00-12:00" do NOT conflict
+    if (start < bEnd && end > bStart) {
+      return { status: 'Unavailable', reason: 'OVERLAP' };
+    }
+  }
+
+  // AC5
+  return { status: 'Available', reason: 'OK' };
+}
+
+```
+
+## File: src/filters.js
+```js
+// Smart Campus — room filtering rules (F1, F2). Pure functions: no DOM, input arrays are never changed.
+// Blocked rooms are NOT hidden here: they stay visible with a "Blocked" label and the
+// availability check always answers Unavailable for them (F3).
+
+/** Parses the attendees field. Returns a whole number >= 1, or null when the text is not valid. */
+export function parseAttendees(text) {
+  const t = String(text ?? '').trim();
+  if (!/^\d+$/.test(t)) return null;
+  const n = Number(t);
+  return n >= 1 ? n : null;
+}
+
+/** F1: capacity must be greater than or equal to the requested attendees. */
+export function meetsCapacity(room, attendees) {
+  return room.capacity >= attendees;
+}
+
+/** F2: the room must contain ALL required equipment items (no items required -> true). */
+export function hasAllEquipment(room, required) {
+  return required.every((item) => room.equipment.includes(item));
+}
+
+/**
+ * Returns a NEW array with the rooms that satisfy every selected requirement.
+ * An empty result is valid: the UI then shows the empty state (F4).
+ * @param {Array} rooms
+ * @param {{attendees: number, equipment?: string[]}} criteria
+ */
+export function filterRooms(rooms, { attendees, equipment = [] }) {
+  return rooms.filter((room) => meetsCapacity(room, attendees) && hasAllEquipment(room, equipment));
+}
+
+```
+
+## File: src/roomView.js
+```js
+// Smart Campus — room-list view model (Assignment #05, Task 03).
+// Pure: turns the raw filter inputs into everything the room list needs to show.
+// Before this module, app.js render() mixed these rules with DOM updates and they could only be tested through jsdom.
+import { filterRooms, parseAttendees } from './filters.js';
+import { emptyStateText, INVALID_ATTENDEES } from './messages.js';
+
+/**
+ * @param {Array} rooms  the catalog
+ * @param {{attendeesText: string, equipment: string[], selectedId: string|null}} input
+ * @returns {{attendees: number|null, matching: Array, selectedId: string|null,
+ *            filterError: string, emptyText: string, countText: string}}
+ */
+export function buildRoomView(rooms, { attendeesText, equipment, selectedId }) {
+  const attendees = parseAttendees(attendeesText);
+  const matching = attendees === null ? [] : filterRooms(rooms, { attendees, equipment });
+
+  // keep the current selection while it still matches, otherwise select the first match (or none)
+  const keepSelection = matching.some((room) => room.id === selectedId);
+
+  let emptyText = '';
+  if (matching.length === 0) emptyText = attendees === null ? INVALID_ATTENDEES : emptyStateText(attendees, equipment);
+
+  return {
+    attendees,
+    matching,
+    selectedId: keepSelection ? selectedId : (matching[0]?.id ?? null),
+    filterError: attendees === null ? INVALID_ATTENDEES : '',
+    emptyText,
+    countText: `${matching.length} of ${rooms.length} rooms match.`,
+  };
+}
+
+```
+
+## File: src/messages.js
+```js
+// Smart Campus — user-facing text (AC6). One place for every message, so the UI never builds them itself.
+import { MAX_DURATION_MINUTES } from './availability.js';
+import { EQUIPMENT } from './rooms.js';
+
+export const MESSAGES = {
+  OK: 'The room is free for this time slot.',
+  INVALID_TIME: 'Enter both a start time and an end time.',
+  START_NOT_BEFORE_END: 'The start time must be earlier than the end time.',
+  IN_THE_PAST: 'This time is already in the past. Choose a later start time.',
+  TOO_LONG: `A booking can last at most ${MAX_DURATION_MINUTES} minutes.`,
+  ROOM_BLOCKED: 'This room is blocked and cannot be booked right now.',
+  OVERLAP: 'This time overlaps with an existing booking.',
+};
+
+/** "2026-10-28T14:00:00" -> "14:00" */
+export const formatTime = (iso) => iso.slice(11, 16);
+
+/** Turns a checkAvailability() result into the text and colour of the result box. */
+export function describeResult({ status, reason }) {
+  return {
+    tone: status === 'Available' ? 'ok' : 'error',
+    text: `${status}: ${MESSAGES[reason] ?? reason}`,
+  };
+}
+
+/** Message for the empty state (F4): repeats what the user asked for. */
+export function emptyStateText(attendees, equipment) {
+  const items = equipment.map((id) => EQUIPMENT[id] ?? id).join(', ');
+  const wanted = items ? `${attendees} attendees with ${items}` : `${attendees} attendees`;
+  return `No rooms match ${wanted}. Try fewer attendees or remove some equipment.`;
+}
+
+export const INVALID_ATTENDEES = 'Enter a whole number of attendees (1 or more).';
+
+```
+
+## File: src/app.js
+```js
+// Smart Campus — UI presentation only. It reads the DOM, calls the pure rules and renders the answers.
+// No booking rule or filter rule is written here; they live in availability.js and filters.js.
+import { checkAvailability } from './availability.js';
+import { buildRoomView } from './roomView.js';
+import { EQUIPMENT, findRoom } from './rooms.js';
+import { describeResult, formatTime } from './messages.js';
+
+/**
+ * Wires the page in `doc` to the given data. Exported so the UI can be tested with jsdom.
+ * @param {Document} doc
+ * @param {{rooms: Array, now: Date, nowIso: string, day: string}} data
+ */
+export function createApp(doc, { rooms, now, nowIso, day }) {
+  const $ = (id) => doc.getElementById(id);
+  const el = {
+    attendees: $('attendees'), filterError: $('filter-error'), equipment: $('equipment-options'),
+    roomCount: $('room-count'), roomList: $('room-list'), empty: $('empty-state'),
+    selected: $('selected-room'), nowLabel: $('now-label'), bookings: $('booking-list'),
+    form: $('check-form'), start: $('start'), end: $('end'), button: $('check-button'), result: $('result'),
+  };
+  let selectedId = null;
+
+  el.nowLabel.textContent = `${day}, ${formatTime(nowIso)}`;
+  for (const [id, label] of Object.entries(EQUIPMENT)) {
+    const option = doc.createElement('label');
+    option.className = 'chip';
+    option.innerHTML = `<input type="checkbox" value="${id}" /> ${label}`;
+    el.equipment.appendChild(option);
+  }
+
+  const requiredEquipment = () =>
+    [...el.equipment.querySelectorAll('input:checked')].map((input) => input.value);
+
+  function hideResult() {
+    el.result.hidden = true;
+    el.result.textContent = '';
+  }
+
+  function showResult() {
+    const room = findRoom(rooms, selectedId);
+    if (!room) return hideResult();
+    const request = {
+      start: el.start.value && `${day}T${el.start.value}:00`,
+      end: el.end.value && `${day}T${el.end.value}:00`,
+    };
+    // F5: the check always uses the bookings of the room that is selected right now
+    const { tone, text } = describeResult(checkAvailability(request, room, room.bookings, now));
+    el.result.hidden = false;
+    el.result.className = `result ${tone}`;
+    el.result.textContent = `${text} (${room.name})`;
+  }
+
+  function renderRoomDetails() {
+    const room = findRoom(rooms, selectedId);
+    el.selected.textContent = room ? `${room.name} (${room.id})` : 'none selected';
+    el.bookings.replaceChildren(
+      ...(room ? room.bookings : []).map((b) => {
+        const li = doc.createElement('li');
+        li.textContent = `${formatTime(b.start)}–${formatTime(b.end)} (${b.id})`;
+        return li;
+      }),
+    );
+    if (room && room.bookings.length === 0) {
+      const li = doc.createElement('li');
+      li.textContent = 'No bookings today.';
+      el.bookings.appendChild(li);
+    }
+    el.button.disabled = !room;
+  }
+
+  function renderRoomCard(room) {
+    const card = doc.createElement('label');
+    card.className = `room${room.blocked ? ' blocked' : ''}`;
+    const equipment = room.equipment.map((id) => EQUIPMENT[id]).join(', ');
+    card.innerHTML = `
+      <input type="radio" name="room" value="${room.id}" ${room.id === selectedId ? 'checked' : ''} />
+      <span class="room-name">${room.name} <small>${room.id}</small></span>
+      <span class="room-meta">Capacity ${room.capacity} · ${equipment}</span>
+      ${room.blocked ? '<span class="badge">Blocked — cannot be booked</span>' : ''}`;
+    return card;
+  }
+
+  /** Recomputes the matching rooms and keeps the selection consistent with them. Rules: roomView.js */
+  function render() {
+    const previous = selectedId;
+    const view = buildRoomView(rooms, {
+      attendeesText: el.attendees.value, equipment: requiredEquipment(), selectedId,
+    });
+    selectedId = view.selectedId;
+
+    el.filterError.hidden = view.filterError === '';
+    el.filterError.textContent = view.filterError;
+    el.roomList.replaceChildren(...view.matching.map(renderRoomCard));
+    el.roomCount.textContent = view.countText;
+    // F4: clear empty state
+    el.empty.hidden = view.emptyText === '';
+    el.empty.textContent = view.emptyText;
+
+    renderRoomDetails();
+    // F5: if the selected room changed, an old answer would belong to another room -> refresh it
+    if (selectedId !== previous && !el.result.hidden) showResult();
+  }
+
+  el.attendees.addEventListener('input', render);
+  el.equipment.addEventListener('change', render);
+  el.roomList.addEventListener('change', (event) => {
+    if (event.target.name !== 'room') return;
+    selectedId = event.target.value;
+    renderRoomDetails();
+    if (!el.result.hidden) showResult(); // F5
+  });
+  el.form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    showResult();
+  });
+
+  render();
+  return { getSelectedId: () => selectedId };
+}
+
+```
+
+## File: src/main.js
+```js
+// Entry point: connects the page to the fictional catalog. All logic lives in the imported modules.
+import { createApp } from './app.js';
+import { ROOMS, NOW, NOW_ISO, DAY } from './rooms.js';
+
+createApp(document, { rooms: ROOMS, now: NOW, nowIso: NOW_ISO, day: DAY });
+```
+
+## Test names (6 files, 43 tests)
+```
+A01 empty start/end is Unavailable, not Available
+A02 text that is not a date is Unavailable
+A03 exactly 120 minutes is Available, 121 minutes is TOO_LONG (AC2)
+A04 touching is Available, overlapping by one minute is OVERLAP (AC4)
+A05 a blocked catalog room is never Available, even for a free slot (F3, AC3)
+A06 the same slot gives different answers for different rooms, using each room\
+A07 many checks do not change any room or booking (AC5)
+C01 has at least four rooms with id, name, capacity, equipment, blocked and bookings
+C02 room ids are unique, every booking belongs to its own room, equipment ids are known
+C03 catalog data is frozen, so it cannot be changed by mistake (AC5)
+V01 valid input: lists matching rooms, selects the first one, no error or empty text
+V02 keeps the current selection while it still matches
+V03 drops a selection that no longer matches and picks the first match
+V04 no match: empty list, no selection, empty-state text repeats the request
+V05 invalid attendees: field error and empty-state both show the input message
+T01 rejects start >= end
+T02 rejects requests in the past
+T03 allows exactly 120 minutes
+T04 rejects 121 minutes
+T05 rejects a blocked room
+T06 rejects a real overlap
+T07 (BUG-A) allows a booking that starts exactly when another ends
+T08 (BUG-A) allows a booking that ends exactly when another starts
+T09 ignores bookings of other rooms
+T10 (BUG-B) does not change the original bookings array
+F01 exact capacity is enough: 20 attendees keep Seminar Room 101 (capacity 20)
+F02 insufficient capacity: 21 attendees remove R-101 (20) but keep R-202 (80) and R-303 (30)
+F03 meetsCapacity boundary: capacity 8 fits 8, not 9
+F04 projector + computers keeps only Computer Lab 303
+F05 a room with only SOME of the items is excluded
+F06 no equipment selected -> only capacity decides; all rooms for 1 attendee
+F07 a blocked room that matches is still listed (it is labelled Blocked, not hidden)
+F08 no match returns an empty array (UI shows the empty state)
+F09 filtering returns a new array and does not change the catalog
+F10 accepts whole numbers >= 1 and rejects 0, negatives, decimals, text and empty
+U01 shows all rooms at start, the blocked one with a label, and no result yet
+U02 capacity + equipment filters update the visible list (F1, F2)
+U03 no match shows a clear empty state and disables the check (F4)
+U04 invalid attendees text gives a field message instead of a list
+U05 switching the room refreshes the answer with that room\
+U06 the blocked room is never shown as available in the UI (F3)
+U07 a filter that removes the selected room moves the selection and refreshes the answer (F5)
+U08 original messages still appear: 120 vs 121 minutes, empty fields (AC2, AC6)
+```
+
+## Actual command results (baseline, Node 22)
+```
+ Test Files  6 passed (6)
+      Tests  43 passed (43)
+npm run build -> exit 0 (3 files in dist/)
+npm run lint -> npm error Missing script: "lint" (exit 1)
+npm audit -> 3 vulnerabilities (1 moderate, 2 critical): vitest/@vitest/mocker (moderate), tinypool <=2.1.1 (critical). Fix only via vitest 5 (breaking). npm audit --omit=dev -> 0 vulnerabilities
+npm outdated -> jsdom 25.0.1 (latest 31.0.1), vite 6.4.5 (latest 8.3.8), vitest 3.2.7 (latest 5.1.1)
+```
+
+==================================================================
+scripts/probe.test.js
+==================================================================
+// Probes for candidate risks (not part of the project test suite).
+import { describe, it, expect } from 'vitest';
+import { JSDOM } from 'jsdom';
+import { readFileSync } from 'node:fs';
+import { checkAvailability } from '../repo/src/availability.js';
+import { createApp } from '../repo/src/app.js';
+import { ROOMS, NOW, NOW_ISO, DAY } from '../repo/src/rooms.js';
+
+const room = { id: 'X', blocked: false };
+const req = { start: '2026-10-28T10:00:00', end: '2026-10-28T11:00:00' };
+
+describe('probes', () => {
+  it('P1 booking with unreadable date -> what status?', () => {
+    const r = checkAvailability(req, room, [{ id: 'B', roomId: 'X', start: 'not-a-date', end: '2026-10-28T12:00:00' }], NOW);
+    console.log('P1', JSON.stringify(r));
+  });
+  it('P2 booking with missing end -> what status?', () => {
+    const r = checkAvailability(req, room, [{ id: 'B', roomId: 'X', start: '2026-10-28T09:30:00' }], NOW);
+    console.log('P2', JSON.stringify(r));
+  });
+  it('P3 room name with HTML is rendered as markup (innerHTML sink)', () => {
+    const html = readFileSync(new URL('../repo/index.html', import.meta.url), 'utf8');
+    const dom = new JSDOM(html);
+    const evil = [{ ...ROOMS[0], id: 'R-1', name: 'Room <img src=x id="injected">', bookings: [] }];
+    createApp(dom.window.document, { rooms: evil, now: NOW, nowIso: NOW_ISO, day: DAY });
+    console.log('P3 injected element exists:', !!dom.window.document.getElementById('injected'));
+  });
+  it('P4 start exactly equal to now', () => {
+    console.log('P4', JSON.stringify(checkAvailability({ start: '2026-10-28T09:00:00', end: '2026-10-28T09:30:00' }, room, [], NOW)));
+  });
+});
+
+==================================================================
+scripts/verify_gemini.test.js
+==================================================================
+// @vitest-environment jsdom
+// Verification of Gemini's candidate findings on a scratch copy of the reviewed version (commit 383fee9).
+import { it } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { URL as NodeURL } from 'node:url';
+import { checkAvailability } from './src/availability.js';
+import { createApp } from './src/app.js';
+import { ROOMS, NOW, NOW_ISO, DAY } from './src/rooms.js';
+
+const log = (...a) => console.log(...a);
+const room = { id: 'X', blocked: false };
+const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+it('G1 DST: 00:30-02:30 wall clock on 2026-10-25 (EU DST end) and on the app day 2026-10-28', () => {
+  const now = new Date('2026-10-20T00:00:00');
+  const dst = checkAvailability({ start: '2026-10-25T00:30:00', end: '2026-10-25T02:30:00' }, room, [], now);
+  const app = checkAvailability({ start: '2026-10-28T10:00:00', end: '2026-10-28T12:00:00' }, room, [], NOW);
+  log(`G1 TZ=${tz} DST-day 2h wall clock -> ${dst.reason}; app day 10:00-12:00 -> ${app.reason}`);
+});
+it('G2 null room / null bookings', () => {
+  for (const [name, fn] of [['room=null', () => checkAvailability({ start: '2026-10-28T10:00:00', end: '2026-10-28T11:00:00' }, null, [], NOW)],
+    ['bookings=null', () => checkAvailability({ start: '2026-10-28T10:00:00', end: '2026-10-28T11:00:00' }, room, null, NOW)]]) {
+    try { log(`G2 ${name} -> ${JSON.stringify(fn())}`); } catch (e) { log(`G2 ${name} -> throws ${e.constructor.name}: ${e.message}`); }
+  }
+});
+it('G3 other dates: function vs UI', () => {
+  log('G3 function, 2027-03-01 10:00-11:00 ->', JSON.stringify(checkAvailability({ start: '2027-03-01T10:00:00', end: '2027-03-01T11:00:00' }, room, [], NOW)));
+  log('G3 function, 23:30 -> next day 00:30 ->', JSON.stringify(checkAvailability({ start: '2026-10-28T23:30:00', end: '2026-10-29T00:30:00' }, room, [], NOW)));
+});
+
+const html = readFileSync(new NodeURL('./index.html', import.meta.url), 'utf8');
+function mount() {
+  document.body.innerHTML = new DOMParser().parseFromString(html, 'text/html').body.innerHTML;
+  createApp(document, { rooms: ROOMS, now: NOW, nowIso: NOW_ISO, day: DAY });
+}
+const $ = (id) => document.getElementById(id);
+const submit = () => $('check-form').dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+
+it('G3b UI cross-midnight 23:30 -> 00:30', () => {
+  mount(); $('start').value = '23:30'; $('end').value = '00:30'; submit();
+  log('G3 UI 23:30-00:30 ->', $('result').textContent);
+});
+it('G5 stale result after editing the time inputs', () => {
+  mount(); $('start').value = '11:00'; $('end').value = '12:00'; submit();
+  const first = $('result').textContent;
+  $('start').value = '10:00'; $('start').dispatchEvent(new Event('input', { bubbles: true }));
+  $('end').value = '10:30'; $('end').dispatchEvent(new Event('input', { bubbles: true }));
+  log(`G5 after 11:00-12:00 check: "${first}" | after editing to 10:00-10:30 (no submit): hidden=${$('result').hidden} "${$('result').textContent}"`);
+  submit(); log(`G5 after pressing the button again: "${$('result').textContent}"`);
+});
+
+==================================================================
+scripts/equivalence.test.js
+==================================================================
+// @vitest-environment jsdom
+// Task 03 evidence: baseline app.js vs refactored app.js on the same inputs; compares visible DOM state.
+import { it, expect } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { URL as NodeURL } from 'node:url';
+import * as oldApp from './old/src/app.js';
+import * as newApp from './new/src/app.js';
+import { ROOMS, NOW, NOW_ISO, DAY } from './new/src/rooms.js';
+
+const html = readFileSync(new NodeURL('./index.html', import.meta.url), 'utf8');
+const ATT = ['', '0', '1', '7', '8', '9', '12', '20', '21', '30', '31', '80', '81', '500', '2.5', 'abc', '-3'];
+const EQ = ['projector', 'whiteboard', 'computers', 'video', 'microphone'];
+
+function mount(mod) {
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  mod.createApp(doc, { rooms: ROOMS, now: NOW, nowIso: NOW_ISO, day: DAY });
+  return doc;
+}
+function act(doc, att, mask, room) {
+  const g = (id) => doc.getElementById(id);
+  doc.querySelectorAll('#equipment-options input').forEach((b, i) => { b.checked = !!(mask & (1 << i)); });
+  g('attendees').value = att;
+  g('attendees').dispatchEvent(new window.Event('input', { bubbles: true }));
+  const r = doc.querySelector(`input[name="room"][value="${room}"]`);
+  if (r) { r.checked = true; r.dispatchEvent(new window.Event('change', { bubbles: true })); }
+  g('start').value = '11:00'; g('end').value = '12:00';
+  g('check-form').dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true }));
+}
+const snap = (doc) => ['filter-error', 'room-count', 'room-list', 'empty-state', 'selected-room', 'booking-list', 'result']
+  .map((id) => { const e = doc.getElementById(id); return `${id}|${e.hidden}|${e.innerHTML}`; }).join('\n');
+
+it('baseline and refactored UI produce identical DOM for every input sequence', () => {
+  let cases = 0, diffs = 0;
+  const o = mount(oldApp), n = mount(newApp);
+  for (const att of ATT) for (let mask = 0; mask < 32; mask++) for (const room of ['R-101', 'R-303', 'R-404', 'none']) {
+    act(o, att, mask, room); act(n, att, mask, room); cases++;
+    if (snap(o) !== snap(n)) diffs++;
+  }
+  console.log(`EQUIVALENCE cases=${cases} differences=${diffs}`);
+  expect(diffs).toBe(0);
+});
+
+==================================================================
+scripts/shots.py
+==================================================================
+# Headless Chrome screenshots of the stale-result scenario (R01), before and after mitigation M1.
+import sys, threading, http.server, functools
+from playwright.sync_api import sync_playwright
+root, port, out = sys.argv[1], int(sys.argv[2]), sys.argv[3]
+srv = http.server.ThreadingHTTPServer(('127.0.0.1', port), functools.partial(http.server.SimpleHTTPRequestHandler, directory=root))
+threading.Thread(target=srv.serve_forever, daemon=True).start()
+with sync_playwright() as p:
+    b = p.chromium.launch(executable_path='/usr/bin/google-chrome')
+    pg = b.new_page(viewport={'width': 900, 'height': 1250})
+    pg.goto(f'http://127.0.0.1:{port}/index.html')
+    pg.fill('#start', '11:00'); pg.fill('#end', '12:00'); pg.click('#check-button')
+    pg.fill('#start', '10:00'); pg.fill('#end', '10:30')   # no new check
+    sec = pg.locator('section.card').nth(2)
+    sec.screenshot(path=out)
+    print(out, 'result hidden =', pg.locator('#result').is_hidden(), '| text =', pg.locator('#result').text_content())
+    b.close()
+srv.shutdown()
