@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Campus — Room availability</title>
+    <meta property="og:image" content="https://bolt.new/static/og_default.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://bolt.new/static/og_default.png">
+    <script type="module" crossorigin src="/assets/index-CCqqJ5vM.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-CuTdS8qQ.css">
+  </head>
+  <body>
+    <main class="page">
+      <header class="header">
+        <h1>Smart Campus</h1>
+        <p class="subtitle">Find a room that fits your group, then check if a time slot is free.</p>
+      </header>
+
+      <section class="card" aria-labelledby="filter-title">
+        <h2 id="filter-title">1. Your requirements</h2>
+        <label>Number of attendees
+          <input id="attendees" type="number" min="1" step="1" value="1" inputmode="numeric" />
+        </label>
+        <p id="filter-error" class="field-error" role="alert" hidden></p>
+        <fieldset class="equipment">
+          <legend>Required equipment (room must have all)</legend>
+          <div id="equipment-options" class="chips"></div>
+        </fieldset>
+      </section>
+
+      <section class="card" aria-labelledby="rooms-title">
+        <h2 id="rooms-title">2. Choose a room</h2>
+        <p id="room-count" class="meta"></p>
+        <div id="room-list" class="room-list" role="radiogroup" aria-labelledby="rooms-title"></div>
+        <p id="empty-state" class="empty-state" role="status" hidden></p>
+      </section>
+
+      <section class="card" aria-labelledby="form-title">
+        <h2 id="form-title">3. Check a time slot</h2>
+        <p class="meta">Room: <strong id="selected-room">none selected</strong></p>
+        <p class="meta">Current time (fixed for the demo): <strong id="now-label"></strong></p>
+        <h3>Existing bookings in this room</h3>
+        <ul id="booking-list" class="booking-list"></ul>
+        <form id="check-form" novalidate>
+          <div class="row">
+            <label>Start time
+              <input id="start" type="time" step="300" required />
+            </label>
+            <label>End time
+              <input id="end" type="time" step="300" required />
+            </label>
+          </div>
+          <button id="check-button" type="submit">Check availability</button>
+        </form>
+        <div id="result" class="result" role="status" aria-live="polite" hidden></div>
+      </section>
+    </main>
+  </body>
+</html>
